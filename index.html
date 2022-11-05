@@ -133,7 +133,7 @@ input:focus{
         <i class="fa-solid fa-power-off" style="font-size: 50px;"></i>
         </div>
         <i class="fa-solid fa-cash-register" style="display: none;" id="register"></i>
-        <i class="fa-solid fa-spinner" style="display: none; position: absolute; font-size: 100px;" id="loader"></i>
+        <i class="fa-solid fa-spinner" style="display: none; position: absolute; font-size: 100px; background-color: black; z-index: 6;" id="loader"></i>
         <p style="font-size: 30px; position: absolute; margin-top: -300px; display: none;" id="pUser"><i class="fa-solid fa-users"></i> select a user:</p>
         <p style="font-size: 30px; position: absolute; margin-top: -300px; display: none;" id="pUserSwitch"><i class="fa-solid fa-spinner" id="loader2"></i> switching user...</p>
         <div style="position: absolute; justify-content: space-around; align-items: center; width: 500px; display: none;" id="userSelect">
@@ -397,6 +397,8 @@ input:focus{
         }, 5000);
       }
       function userOn2() {
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("loader").style.animation = "rotate 1s linear infinite";
         document.getElementById("loading").style.display = "flex";
             document.getElementById("power").style.display = "none";
       }
