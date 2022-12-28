@@ -7,7 +7,7 @@
     <title>Cash register</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
 </head>
 <body onload="loadFunction()">
     <style>
@@ -16,108 +16,58 @@
             padding: 0;
             box-sizing: border-box;
             user-select: none;
-            font-family: 'Montserrat', sans-serif;
-            text-transform: lowercase;
+            font-family: 'Work Sans', sans-serif;
             text-align: center;
+            transition: 0.3s;
         }
-        #loading{
-            width: 100%;
-            height: 100%;
+        #start{
+            position: fixed;
             top: 0;
             right: 0;
-            bottom: 0;
             left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: fixed;
-            font-size: 200px;
-            background-color: black;
-            color: white;
-            z-index: 5;
+            flex-direction: column;
+            z-index: 1;
+        }
+        button{
+            overflow: hidden;
+        }
+        input:focus {
+            outline: none;
         }
         /* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
-}
-input:focus{
-    outline: none;
-}
-        @keyframes rotate{
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        /* Firefox */
+        input[type=number] {
+          -moz-appearance: textfield;
+        }
+        ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+          color: black;
+          opacity: 1; /* Firefox */
+        }
+        :-ms-input-placeholder { /* Internet Explorer 10-11 */
+          color: black;
+        }
+        ::-ms-input-placeholder { /* Microsoft Edge */
+          color: black;
+        }
+        @keyframes spin{
             0%{
-                transform: rotate(0deg);
-            }
-            12.4%{
-                transform: rotate(0deg);
-            }
-            12.5%{
-                transform: rotate(45deg);
-            }
-            24.9%{
-                transform: rotate(45deg);
-            }
-            25%{
-                transform: rotate(90deg);
-            }
-            37.4%{
-                transform: rotate(90deg);
-            }
-            37.5%{
-                transform: rotate(135deg);
-            }
-            49.9%{
-                transform: rotate(135deg);
-            }
-            50%{
-                transform: rotate(180deg);
-            }
-            62.4%{
-                transform: rotate(180deg);
-            }
-            62.5%{
-                transform: rotate(225deg);
-            }
-            74.9%{
-                transform: rotate(225deg);
-            }
-            75%{
-                transform: rotate(270deg);
-            }
-            87.4%{
-                transform: rotate(270deg);
-            }
-            87.5%{
-                transform: rotate(315deg);
-            }
-            99.9%{
-                transform: rotate(315deg);
+                transform: rotate(0);
             }
             100%{
                 transform: rotate(360deg);
-            }
-        }
-        @keyframes blink {
-            0%{
-                opacity: 1;
-            }
-            49%{
-                opacity: 1;
-            }
-            50%{
-                opacity: 0;
-            }
-            99%{
-                opacity: 0;
-            }
-            100%{
-                opacity: 1;
             }
         }
     </style>
@@ -126,841 +76,919 @@ input:focus{
     <audio src="help2.mp3" id="help2"></audio>
     <audio src="help3.mp3" id="help3"></audio>
     <audio src="help4.mp3" id="help4"></audio>
-    <div id="loading">
-        <i class="fa-solid fa-power-off" style="position: absolute; display: none; font-size: 50px; top: 15px; right: 15px; cursor: pointer;" id="power" onclick="powerOff()"></i>
-        <div style="width: 170px; height: 50px; cursor: pointer; background-color: white; position: absolute; right: 15px; top: 15px; color: black; display: none; justify-content: right; align-items: center; border-radius: 100px;" onclick="powerOffNow()" id="powerConfirm">
-            <p style="position: absolute; left: 30px; font-size: 20px;">restart?</p>
-        <i class="fa-solid fa-power-off" style="font-size: 50px;"></i>
+    <div id="start">
+        <p style="position: absolute; bottom: 30px; opacity: 0;" id="createdByMatas"><span id="raide1">C</span><span id="raide2">r</span><span id="raide3">e</span><span id="raide4">a</span><span id="raide5">t</span><span id="raide6">e</span><span id="raide7">d</span> <span id="raide8">b</span><span id="raide9">y</span> <span id="raide10">M</span><span id="raide11">a</span><span id="raide12">t</span><span id="raide13">a</span><span id="raide14">s</span></p>
+        <i class="fa-solid fa-wallet" style="font-size: 200px; opacity: 0;" id="wallet"></i>
+        <i class="fa-solid fa-circle-notch" style="font-size: 150px; opacity: 0; position: absolute; animation: spin 1s linear infinite;" id="spin"></i>
+        <i class="fa-solid fa-power-off" style="position: fixed; top: 15px; right: 15px; font-size: 50px; cursor: pointer; z-index: 2; opacity: 0; display: none;" id="power" onclick="question()"></i>
+        <div style="width: 150px; height: 60px; padding-left: 15px; border: 5px solid white; cursor: pointer; border-radius: 100px; position: fixed; right: -170px; z-index: 3; top: 10px; display: flex; justify-content: space-around; align-items: center; background-color: black; color: white;" id="confirmRestart" onclick="restartNow()"><p>Restart?</p><i class="fa-solid fa-power-off" style="font-size: 50px;"></i></div>
+        <div style="width: 300px; height: 300px; justify-content: center; align-items: center; flex-direction: column; opacity: 0; display: none;" id="selection">
+            <p style="font-size: 30px;" id="selectUserP">Select user:</p>
+            <p style="font-size: 30px; display: none;" id="switchingUserP"><i class="fa-solid fa-circle-notch" style="animation: spin 1s linear infinite;"></i> Switching user...</p>
+            <div style="font-size: 100px; display: flex; justify-content: space-around; align-items: center; width: 100%; height: 200px;">
+                <div style="cursor: pointer; overflow: hidden; width: 120px; height: 150px; padding: 0; margin: 0; pointer-events: all;" id="select" onclick="userChoose()"><i class="fa-solid fa-circle-user"></i><p style="font-size: 20px;">Pardavejas</p></div>
+                <div style="cursor: pointer; overflow: hidden; width: 120px; height: 150px; padding: 0; margin: 0; pointer-events: all;" id="add" onclick="userAdd()"><i class="fa-solid fa-circle-plus"></i><p style="font-size: 20px;">Add user</p></div>
+            </div>
         </div>
-        <i class="fa-solid fa-cash-register" style="display: none;" id="register"></i>
-        <i class="fa-solid fa-spinner" style="display: none; position: absolute; font-size: 100px; background-color: black; z-index: 6;" id="loader"></i>
-        <p style="font-size: 30px; position: absolute; margin-top: -300px; display: none;" id="pUser"><i class="fa-solid fa-users"></i> select a user:</p>
-        <p style="font-size: 30px; position: absolute; margin-top: -300px; display: none;" id="pUserSwitch"><i class="fa-solid fa-spinner" id="loader2"></i> switching user...</p>
-        <div style="position: absolute; justify-content: space-around; align-items: center; width: 500px; display: none;" id="userSelect">
-        <div style="width: 200px; cursor: pointer; height: 200px; color: white; overflow: hidden; font-size: 150px; display: flex; justify-content: space-around; align-items: center; border-radius: 25px; flex-direction: column;" id="userThis" onclick="selectUserNow()"><i class="fa-regular fa-circle-user"></i><p style="font-size: 25px;">pardavejas</p></div>
-        <div style="width: 200px; cursor: pointer; height: 200px; color: white; overflow: hidden; font-size: 150px; display: flex; justify-content: space-around; align-items: center; border-radius: 25px; flex-direction: column;" id="userPlus" onclick="addUserNow()"><i class="fa-solid fa-circle-plus"></i><p style="font-size: 25px;">add a user</p></div>
+        <div style="width: 400px; padding-top: 100px; padding-bottom: 100px; padding-right: 15px; padding-left: 15px; height: 400px; z-index: 1; border: 5px solid white; position: absolute; border-radius: 50px; background-color: black; display: none; justify-content: space-around; align-items: center; font-size: 20px; flex-direction: column; color: white; opacity: 0;" id="error">
+            <p style="font-size: 25px; margin-bottom: 50px;"><i class="fa-solid fa-triangle-exclamation"></i> An error has occured.</p>
+            <div style="display: flex; justify-content: space-around; align-items: center; flex-direction: column; height: 150px;">
+                <p>Cannot add user.</p>
+                <p>Reason:</p>
+                <p>840320_n0_r1ght5</p>
+            </div>
         </div>
-        <div style="font-size: 30px; width: 100%; z-index: 5; height: 100%; position: absolute; top: 0; right: 0; left: 0; bottom: 0; background-color: black; display: none; justify-content: center; align-items: center; flex-direction: column;" id="error"><p><i class="fa-solid fa-bug"></i> an error has occured.</p><button style="width: 200px; margin-top: 20px; height: 50px; border-radius: 50px; border: none; background-color: white; font-size: 25px; cursor: pointer;" onclick="restart()"><i class="fa-solid fa-power-off"></i> restart</button></div>
+        <div style="width: 400px; padding-top: 100px; padding-bottom: 100px; padding-right: 15px; padding-left: 15px; height: 400px; z-index: 1; border: 5px solid white; position: absolute; border-radius: 50px; background-color: black; display: none; justify-content: space-around; align-items: center; font-size: 20px; flex-direction: column; color: white; opacity: 0;" id="error2">
+            <p style="font-size: 25px; margin-bottom: 50px;"><i class="fa-solid fa-triangle-exclamation"></i> An error has occured.</p>
+            <div style="display: flex; justify-content: space-around; align-items: center; flex-direction: column; height: 150px;">
+                <p>Cannot exit payment.</p>
+                <p>Reason:</p>
+                <p>844738_unkn0wn</p>
+            </div>
+        </div>
     </div>
-    <i class="fa-regular fa-circle-user" style="position: fixed; top: 15px; right: 15px; font-size: 50px; cursor: pointer; z-index: 1;" id="zmogus" onclick="userOn()"></i>
-    <i class="fa-regular fa-circle-user" style="position: fixed; top: 15px; right: 15px; font-size: 50px; cursor: pointer; z-index: 1; display: none;" id="zmogus2" onclick="userOn2()"></i>
-    <i class="fa-solid fa-spinner" style="position: fixed; top: 15px; right: 80px; font-size: 50px; cursor: pointer; display: none;" id="loader3"></i>
+    <div style="width: 100%; height: 100%; position: fixed; top: 0; right: 0; left: 0; bottom: 0; z-index: 15; display: none;" id="disableClick"></div>
+    <div style="width: 300px; height: 60px; border-radius: 100px; background-color: black; color: white; z-index: 3; position: fixed; top: 10px; left: -320px; border: 5px solid white; display: flex; justify-content: center; align-items: center; font-size: 25px;" id="closedCashAuto"><p><i class="fa-solid fa-shop-lock"></i> Kasa uzdaryta.</p></div>
+    <div style="width: 300px; height: 60px; border-radius: 100px; background-color: white; color: black; z-index: 3; position: fixed; top: 10px; left: -320px; border: 5px solid black; display: flex; justify-content: center; align-items: center; font-size: 25px;" id="closedCashAuto2"><p><i class="fa-solid fa-shop-lock"></i> Kasa uzdaryta.</p></div>
+    <div style="width: 300px; height: 60px; border-radius: 100px; background-color: white; color: black; z-index: 3; position: fixed; top: 10px; left: -320px; border: 5px solid black; display: flex; justify-content: center; align-items: center; font-size: 25px;" id="openedCashAuto"><p><i class="fa-solid fa-unlock-keyhole"></i> Kasa atidaryta.</p></div>
+    <div style="width: 450px; height: 60px; border-radius: 100px; background-color: white; color: black; z-index: 3; position: fixed; top: 10px; left: -470px; border: 5px solid black; display: flex; justify-content: center; align-items: center; font-size: 25px;" id="userCashAuto"><p><i class="fa-solid fa-circle-user"></i> User switched to Pardavejas.</p></div>
+    <i class="fa-solid fa-circle-user" style="position: fixed; z-index: 5; top: 15px; right: 15px; font-size: 50px; cursor: pointer; display: none; opacity: 0;" onclick="loadSelect()" id="selectLoadBtn"></i>
+    <i class="fa-solid fa-circle-notch" style="animation: spin 1s linear infinite; position: fixed; display: none; opacity: 0; z-index: 5; top: 15px; right: 15px; font-size: 50px;" id="loadUserSelect"></i>
+    <div id="loadRegister" style="width: 100%; height: 100%; top: 0; bottom: 0; left: 0; right: 0; position: fixed; display: none; justify-content: center; align-items: center; opacity: 0;">
+        <p style="font-size: 30px;"><i class="fa-solid fa-circle-notch" style="animation: spin 1s linear infinite;"></i> Ikeliamas Pardavejo profilis...</p>
+    </div>
+    <div id="registerClosed" style="width: 100%; height: 100%; top: 0; bottom: 0; left: 0; right: 0; position: fixed; display: none; justify-content: center; align-items: center; flex-direction: column; opacity: 0;">
+        <p style="font-size: 30px; margin-bottom: 50px;" id="kasaUzdaryta"><i class="fa-solid fa-shop-lock"></i> Kasa uzdaryta.</p>
+        <p style="font-size: 30px; margin-bottom: 50px; display: none;" id="loadingOpen"><i class="fa-solid fa-circle-notch" style="animation: spin 1s linear infinite;"></i> Kasa atidaroma...</p>
+        <button style="width: 200px; height: 50px; border-radius: 100px; border: 5px solid black; background-color: white; font-size: 25px; cursor: pointer;" id="openBtn" onclick="openCash()"><i class="fa-solid fa-unlock-keyhole"></i> Atidaryti</button>
+    </div>
+    <div id="cardReader" style="width: 100%; height: 100%; top: 0; bottom: 0; left: 0; right: 0; position: fixed; display: none; justify-content: center; align-items: center; flex-direction: column; opacity: 0;">
+        <i class="fa-solid fa-circle-exclamation" style="font-size: 100px;"></i>
+        <p style="font-size: 30px; margin-top: 50px; margin-bottom: 50px;" id="switchingUserP">Mokejimams atlikti reikalingas atskiras korteliu skaitytuvas!</p>
+        <button style="width: 200px; height: 50px; border-radius: 100px; border: 5px solid black; background-color: white; font-size: 25px; cursor: pointer; opacity: 0; pointer-events: none;" id="okBtn" onclick="openSuccess()"><i class="fa-solid fa-circle-check"></i> OK</button>
+    </div>
+    <div id="registerOpen" style="width: 100%; height: 100%; top: 0; bottom: 0; left: 0; right: 0; position: fixed; display: none; justify-content: center; align-items: center; flex-direction: column; opacity: 0;">
+        <p style="font-size: 30px; margin-bottom: 50px;" id="pasirinktiVeikla"><i class="fa-solid fa-bars-staggered"></i> Pasirinkite veikla:</p>
+        <p style="font-size: 30px; margin-bottom: 50px; display: none;" id="cashIsClosing"><i class="fa-solid fa-circle-notch" style="animation: spin 1s linear infinite;"></i> Kasa uzdaroma...</p>
+        <p style="font-size: 30px; margin-bottom: 50px; display: none;" id="voiceLoad"><i class="fa-solid fa-circle-notch" style="animation: spin 1s linear infinite;"></i> Ikeliama pagalba...</p>
+        <p style="font-size: 30px; margin-bottom: 50px; display: none;" id="startingPurchase"><i class="fa-solid fa-circle-notch" style="animation: spin 1s linear infinite;"></i> Pradedamas pirkimas...</p>
+        <button style="width: 200px; height: 50px; border-radius: 100px; border: 5px solid black; background-color: white; font-size: 25px; cursor: pointer; margin-bottom: 20px;" id="purchaseNew" onclick="newPurchase()"><i class="fa-solid fa-cart-plus"></i> Pirkimas</button>
+        <button style="width: 200px; height: 50px; border-radius: 100px; border: 5px solid black; background-color: white; font-size: 25px; cursor: pointer; margin-bottom: 20px;" id="closeRegister" onclick="closeRegisterNow()"><i class="fa-solid fa-shop-lock"></i> Uzdaryti</button>
+        <button style="width: 200px; height: 50px; border-radius: 100px; border: 5px solid black; background-color: white; font-size: 25px; cursor: pointer;" id="voice" onclick="voicePackOpen()"><i class="fa-solid fa-square-phone-flip"></i> Pagalba</button>
+        <div style="width: 400px; padding-top: 15px; padding-bottom: 15px; padding-right: 15px; padding-left: 15px; height: 400px; z-index: 1; overflow: hidden; border: 5px solid black; position: absolute; border-radius: 50px; background-color: white; display: none; justify-content: space-around; align-items: center; font-size: 20px; flex-direction: column; color: black; opacity: 0;" id="voiceWindow">
+            <i class="fa-solid fa-circle-xmark" style="position: absolute; top: 25px; right: 25px; font-size: 30px; cursor: pointer;" id="voiceCloser" onclick="voicePackClose()"></i>
+            <i class="fa-solid fa-volume-high" style="position: absolute; top: 25px; left: -50px; font-size: 30px;" id="playing"></i>
+            <i class="fa-solid fa-circle" style="position: absolute; top: 25px; left: 25px; font-size: 10px; opacity: 0;" id="playingDot"></i>
+            <p style="font-size: 25px;"><i class="fa-solid fa-square-phone-flip"></i> Pagalba</p>
+            <button style="width: 200px; height: 50px; border-radius: 100px; border: 5px solid black; background-color: white; font-size: 25px; cursor: pointer;" id="voicesSystem" onclick="playSystem()"><i class="fa-solid fa-burst"></i> Sistema</button>
+            <button style="width: 200px; height: 50px; border-radius: 100px; border: 5px solid black; background-color: white; font-size: 25px; cursor: pointer;" id="voicesAdvice" onclick="playAdvice()"><i class="fa-solid fa-circle-question"></i> Patarimai</button>
+            <button style="width: 200px; height: 50px; border-radius: 100px; border: 5px solid black; background-color: white; font-size: 25px; cursor: pointer;" id="voicesWorker" onclick="playWorker()"><i class="fa-solid fa-users"></i> Kasininkas</button>
+            <button style="width: 200px; height: 50px; border-radius: 100px; border: 5px solid black; background-color: white; font-size: 25px; cursor: pointer;" id="voicesOther" onclick="playOther()"><i class="fa-solid fa-circle-dot"></i> Kita</button>
+        </div>
+    </div>
 
-    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column;" id="closed">
-    <p style="font-size: 50px;">kasa uzdaryta.</p>
-    <button style="width: 200px; margin-top: 20px; height: 50px; border-radius: 50px; border: none; background-color: black; font-size: 25px; cursor: pointer; color: white;" id="opener" onclick="openCash()"><i class="fa-solid fa-unlock"></i> atidaryti</button>
-    <i class="fa-solid fa-spinner" style="font-size: 50px; position: absolute; margin-top: 80px; margin-left: -270px; display: none;" id="loader4"></i>
-    </div>
-    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; display: none; justify-content: center; align-items: center; flex-direction: column;" id="cardWarning">
-    <i class="fa-solid fa-circle-exclamation" style="font-size: 100px; color: red;"></i>
-    <p style="font-size: 30px; margin-top: 20px; color: red;">external bank card reader required to connect to make payments.</p>
-    <button style="width: 200px; margin-top: 20px; height: 50px; border-radius: 50px; border: none; background-color: black; font-size: 25px; cursor: pointer; color: white; opacity: 0; pointer-events: none;" id="needCardReader" onclick="ok()"><i class="fa-solid fa-thumbs-up"></i> ok</button>
-    </div>
-    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; display: none; justify-content: center; align-items: center; flex-direction: column;" id="main">
-        <p style="font-size: 30px;">pasirinkite veikla:</p>
-        <button style="width: 250px; margin-top: 20px; height: 50px; border-radius: 50px; border: none; background-color: black; font-size: 25px; cursor: pointer; color: white;" id="paymentStarter" onclick="newBuyer()"><i class="fa-solid fa-plus"></i> naujas pirkimas</button>
-        <i class="fa-solid fa-spinner" style="font-size: 50px; position: absolute; margin-top: -80px; margin-left: -320px; display: none;" id="loaderNo"></i>
-        <button style="width: 250px; margin-top: 20px; height: 50px; border-radius: 50px; border: none; background-color: black; font-size: 25px; cursor: pointer; color: white;" id="closer" onclick="closeCash()"><i class="fa-solid fa-lock"></i> uzdaryti kasa</button>
-        <i class="fa-solid fa-spinner" style="font-size: 50px; position: absolute; margin-top: 60px; margin-left: -320px; display: none;" id="loader6"></i>
-        <button style="width: 250px; margin-top: 20px; height: 50px; border-radius: 50px; border: none; background-color: black; font-size: 25px; cursor: pointer; color: white;" id="pagalbele" onclick="helpNow()"><i class="fa-solid fa-circle-question"></i> reikia pagalbos</button>
-        <i class="fa-solid fa-spinner" style="font-size: 50px; position: absolute; margin-top: 200px; margin-left: -320px; display: none;" id="loader5"></i>
-
-        <div style="width: 500px; height: 400px; border: 2px solid black; background-color: white; position: absolute; border-radius: 100px; display: none; justify-content: center; align-items: center; flex-direction: column;" id="helperis">
-            <button style="width: 300px; margin-top: 20px; height: 50px; border-radius: 50px; border: none; background-color: black; font-size: 25px; cursor: pointer; color: white;" id="sistemaNeveikia" onclick="neveikia()"><i class="fa-solid fa-network-wired"></i> sistema neveikia</button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; position: absolute; margin-top: -260px; margin-left: -370px; display: none;" id="loaderNotWork"></i>
-            <button style="width: 300px; margin-top: 20px; height: 50px; border-radius: 50px; border: none; background-color: black; font-size: 25px; cursor: pointer; color: white;" id="sistemaPatarimai" onclick="patarimai()"><i class="fa-solid fa-circle-info"></i> sistemos patarimai</button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; position: absolute; margin-top: -120px; margin-left: -370px; display: none;" id="loaderAdvice"></i>
-            <button style="width: 300px; margin-top: 20px; height: 50px; border-radius: 50px; border: none; background-color: black; font-size: 25px; cursor: pointer; color: white;" id="sistemaPakeisti" onclick="pakeisti()"><i class="fa-solid fa-user-group"></i> pakeisti darbuotoja</button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; position: absolute; margin-top: 20px; margin-left: -370px; display: none;" id="loaderChange"></i>
-            <button style="width: 300px; margin-top: 20px; height: 50px; border-radius: 50px; border: none; background-color: black; font-size: 25px; cursor: pointer; color: white;" id="sistemaKita" onclick="kita()"><i class="fa-solid fa-ellipsis"></i> kita</button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; position: absolute; margin-top: 160px; margin-left: -370px; display: none;" id="loaderOther"></i>
-            <button style="width: 300px; margin-top: 20px; height: 50px; border-radius: 50px; border: none; background-color: black; font-size: 25px; cursor: pointer; color: white;" id="uzdarytiPagalba" onclick="pagalbaClose()"><i class="fa-solid fa-circle-xmark"></i> uzdaryti</button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; position: absolute; margin-top: 300px; margin-left: -370px; display: none;" id="loaderClose"></i>
-        </div>
-    </div>
-    <div style="width: 100%; height: auto; padding-top: 25px; padding-bottom: 15px; min-height: 100%; display: none; justify-content: center; align-items: center; flex-direction: column;" id="newPaymentNow">
-        <p style="font-size: 30px; margin-bottom: 30px;">iveskite prekes.</p>
-        <div style="width: auto; padding-left: 10px; padding-right: 10px; height: 70px; display: flex; justify-content: space-around; align-items: center; border: 2px solid black; border-radius: 100px;" id="preke1">
-            <input id="inputBtn1" type="text" placeholder="pavadinimas" style="width: 400px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-right: 5px;">
-            <input id="inputeBtn1" type="number" placeholder="kaina" style="width: 200px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">
-            <i class="fa-solid fa-euro-sign" style="position: absolute; font-size: 30px; margin-left: 500px;"></i>
-            <button style="font-size: 30px; width: 50px; height: 50px; border-radius: 100px; border: none; background-color: black; color: white; cursor: pointer;" id="btn1" onclick="addItem1()"><i class="fa-solid fa-plus"></i></button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; display: none;" id="loaderBtn1"></i>
-        </div>
-        <div style="width: auto; padding-left: 10px; padding-right: 10px; height: 70px; display: none; justify-content: space-around; align-items: center; border: 2px solid black; border-radius: 100px;" id="preke2">
-            <input id="inputBtn2" type="text" placeholder="pavadinimas" style="width: 400px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-right: 5px;">
-            <input id="inputeBtn2" type="number" placeholder="kaina" style="width: 200px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">
-            <i class="fa-solid fa-euro-sign" style="position: absolute; font-size: 30px; margin-left: 500px;"></i>
-            <button style="font-size: 30px; width: 50px; height: 50px; border-radius: 100px; border: none; background-color: black; color: white; cursor: pointer;" id="btn2" onclick="addItem2()"><i class="fa-solid fa-plus"></i></button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; display: none;" id="loaderBtn2"></i>
-        </div>
-        <div style="width: auto; padding-left: 10px; padding-right: 10px; height: 70px; display: none; justify-content: space-around; align-items: center; border: 2px solid black; border-radius: 100px;" id="preke3">
-            <input id="inputBtn3" type="text" placeholder="pavadinimas" style="width: 400px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-right: 5px;">
-            <input id="inputeBtn3" type="number" placeholder="kaina" style="width: 200px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">
-            <i class="fa-solid fa-euro-sign" style="position: absolute; font-size: 30px; margin-left: 500px;"></i>
-            <button style="font-size: 30px; width: 50px; height: 50px; border-radius: 100px; border: none; background-color: black; color: white; cursor: pointer;" id="btn3" onclick="addItem3()"><i class="fa-solid fa-plus"></i></button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; display: none;" id="loaderBtn3"></i>
-        </div>
-        <div style="width: auto; padding-left: 10px; padding-right: 10px; height: 70px; display: none; justify-content: space-around; align-items: center; border: 2px solid black; border-radius: 100px;" id="preke4">
-            <input id="inputBtn4" type="text" placeholder="pavadinimas" style="width: 400px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-right: 5px;">
-            <input id="inputeBtn4" type="number" placeholder="kaina" style="width: 200px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">
-            <i class="fa-solid fa-euro-sign" style="position: absolute; font-size: 30px; margin-left: 500px;"></i>
-            <button style="font-size: 30px; width: 50px; height: 50px; border-radius: 100px; border: none; background-color: black; color: white; cursor: pointer;" id="btn4" onclick="addItem4()"><i class="fa-solid fa-plus"></i></button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; display: none;" id="loaderBtn4"></i>
-        </div>
-        <div style="width: auto; padding-left: 10px; padding-right: 10px; height: 70px; display: none; justify-content: space-around; align-items: center; border: 2px solid black; border-radius: 100px;" id="preke5">
-            <input id="inputBtn5" type="text" placeholder="pavadinimas" style="width: 400px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-right: 5px;">
-            <input id="inputeBtn5" type="number" placeholder="kaina" style="width: 200px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">
-            <i class="fa-solid fa-euro-sign" style="position: absolute; font-size: 30px; margin-left: 500px;"></i>
-            <button style="font-size: 30px; width: 50px; height: 50px; border-radius: 100px; border: none; background-color: black; color: white; cursor: pointer;" id="btn5" onclick="addItem5()"><i class="fa-solid fa-plus"></i></button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; display: none;" id="loaderBtn5"></i>
-        </div>
-        <div style="width: auto; padding-left: 10px; padding-right: 10px; height: 70px; display: none; justify-content: space-around; align-items: center; border: 2px solid black; border-radius: 100px;" id="preke6">
-            <input id="inputBtn6" type="text" placeholder="pavadinimas" style="width: 400px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-right: 5px;">
-            <input id="inputeBtn6" type="number" placeholder="kaina" style="width: 200px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">
-            <i class="fa-solid fa-euro-sign" style="position: absolute; font-size: 30px; margin-left: 500px;"></i>
-            <button style="font-size: 30px; width: 50px; height: 50px; border-radius: 100px; border: none; background-color: black; color: white; cursor: pointer;" id="btn6" onclick="addItem6()"><i class="fa-solid fa-plus"></i></button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; display: none;" id="loaderBtn6"></i>
-        </div>
-        <div style="width: auto; padding-left: 10px; padding-right: 10px; height: 70px; display: none; justify-content: space-around; align-items: center; border: 2px solid black; border-radius: 100px;" id="preke7">
-            <input id="inputBtn7" type="text" placeholder="pavadinimas" style="width: 400px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-right: 5px;">
-            <input id="inputeBtn7" type="number" placeholder="kaina" style="width: 200px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">
-            <i class="fa-solid fa-euro-sign" style="position: absolute; font-size: 30px; margin-left: 500px;"></i>
-            <button style="font-size: 30px; width: 50px; height: 50px; border-radius: 100px; border: none; background-color: black; color: white; cursor: pointer;" id="btn7" onclick="addItem7()"><i class="fa-solid fa-plus"></i></button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; display: none;" id="loaderBtn7"></i>
-        </div>
-        <div style="width: auto; padding-left: 10px; padding-right: 10px; height: 70px; display: none; justify-content: space-around; align-items: center; border: 2px solid black; border-radius: 100px;" id="preke8">
-            <input id="inputBtn8" type="text" placeholder="pavadinimas" style="width: 400px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-right: 5px;">
-            <input id="inputeBtn8" type="number" placeholder="kaina" style="width: 200px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">
-            <i class="fa-solid fa-euro-sign" style="position: absolute; font-size: 30px; margin-left: 500px;"></i>
-            <button style="font-size: 30px; width: 50px; height: 50px; border-radius: 100px; border: none; background-color: black; color: white; cursor: pointer;" id="btn8" onclick="addItem8()"><i class="fa-solid fa-plus"></i></button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; display: none;" id="loaderBtn8"></i>
-        </div>
-        <div style="width: auto; padding-left: 10px; padding-right: 10px; height: 70px; display: none; justify-content: space-around; align-items: center; border: 2px solid black; border-radius: 100px;" id="preke9">
-            <input id="inputBtn9" type="text" placeholder="pavadinimas" style="width: 400px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-right: 5px;">
-            <input id="inputeBtn9" type="number" placeholder="kaina" style="width: 200px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">
-            <i class="fa-solid fa-euro-sign" style="position: absolute; font-size: 30px; margin-left: 500px;"></i>
-            <button style="font-size: 30px; width: 50px; height: 50px; border-radius: 100px; border: none; background-color: black; color: white; cursor: pointer;" id="btn9" onclick="addItem9()"><i class="fa-solid fa-plus"></i></button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; display: none;" id="loaderBtn9"></i>
-        </div>
-        <div style="width: auto; padding-left: 10px; padding-right: 10px; height: 70px; display: none; justify-content: space-around; align-items: center; border: 2px solid black; border-radius: 100px;" id="preke10">
-            <input id="inputBtn10" type="text" placeholder="pavadinimas" style="width: 400px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-right: 5px;">
-            <input id="inputeBtn10" type="number" placeholder="kaina" style="width: 200px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">
-            <i class="fa-solid fa-euro-sign" style="position: absolute; font-size: 30px; margin-left: 500px;"></i>
-            <button style="font-size: 30px; width: 50px; height: 50px; border-radius: 100px; border: none; background-color: black; color: white; cursor: pointer;" id="btn10" onclick="addItem10()"><i class="fa-solid fa-plus"></i></button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; display: none;" id="loaderBtn10"></i>
-        </div>
-        <div style="width: auto; padding-left: 10px; padding-right: 10px; height: 70px; display: none; justify-content: space-around; align-items: center; border: 2px solid black; border-radius: 100px;" id="preke11">
-            <input id="inputBtn11" type="text" placeholder="pavadinimas" style="width: 400px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-right: 5px;">
-            <input id="inputeBtn11" type="number" placeholder="kaina" style="width: 200px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">
-            <i class="fa-solid fa-euro-sign" style="position: absolute; font-size: 30px; margin-left: 500px;"></i>
-            <button style="font-size: 30px; width: 50px; height: 50px; border-radius: 100px; border: none; background-color: black; color: white; cursor: pointer;" id="btn11" onclick="addItem11()"><i class="fa-solid fa-plus"></i></button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; display: none;" id="loaderBtn11"></i>
-        </div>
-        <div style="width: auto; padding-left: 10px; padding-right: 10px; height: 70px; display: none; justify-content: space-around; align-items: center; border: 2px solid black; border-radius: 100px;" id="preke12">
-            <input id="inputBtn12" type="text" placeholder="pavadinimas" style="width: 400px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-right: 5px;">
-            <input id="inputeBtn12" type="number" placeholder="kaina" style="width: 200px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">
-            <i class="fa-solid fa-euro-sign" style="position: absolute; font-size: 30px; margin-left: 500px;"></i>
-            <button style="font-size: 30px; width: 50px; height: 50px; border-radius: 100px; border: none; background-color: black; color: white; cursor: pointer;" id="btn12" onclick="addItem12()"><i class="fa-solid fa-plus"></i></button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; display: none;" id="loaderBtn12"></i>
-        </div>
-        <div style="width: auto; padding-left: 10px; padding-right: 10px; height: 70px; display: none; justify-content: space-around; align-items: center; border: 2px solid black; border-radius: 100px;" id="preke13">
-            <input id="inputBtn13" type="text" placeholder="pavadinimas" style="width: 400px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-right: 5px;">
-            <input id="inputeBtn13" type="number" placeholder="kaina" style="width: 200px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">
-            <i class="fa-solid fa-euro-sign" style="position: absolute; font-size: 30px; margin-left: 500px;"></i>
-            <button style="font-size: 30px; width: 50px; height: 50px; border-radius: 100px; border: none; background-color: black; color: white; cursor: pointer;" id="btn13" onclick="addItem13()"><i class="fa-solid fa-plus"></i></button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; display: none;" id="loaderBtn13"></i>
-        </div>
-        <div style="width: auto; padding-left: 10px; padding-right: 10px; height: 70px; display: none; justify-content: space-around; align-items: center; border: 2px solid black; border-radius: 100px;" id="preke14">
-            <input id="inputBtn14" type="text" placeholder="pavadinimas" style="width: 400px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-right: 5px;">
-            <input id="inputeBtn14" type="number" placeholder="kaina" style="width: 200px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">
-            <i class="fa-solid fa-euro-sign" style="position: absolute; font-size: 30px; margin-left: 500px;"></i>
-            <button style="font-size: 30px; width: 50px; height: 50px; border-radius: 100px; border: none; background-color: black; color: white; cursor: pointer;" id="btn14" onclick="addItem14()"><i class="fa-solid fa-plus"></i></button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; display: none;" id="loaderBtn14"></i>
-        </div>
-        <div style="width: auto; padding-left: 10px; padding-right: 10px; height: 70px; display: none; justify-content: space-around; align-items: center; border: 2px solid black; border-radius: 100px;" id="preke15">
-            <input id="inputBtn15" type="text" placeholder="pavadinimas" style="width: 400px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-right: 5px;">
-            <input id="inputeBtn15" type="number" placeholder="kaina" style="width: 200px; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">
-            <i class="fa-solid fa-euro-sign" style="position: absolute; font-size: 30px; margin-left: 500px;"></i>
-            <button style="font-size: 30px; width: 50px; height: 50px; border-radius: 100px; border: none; background-color: black; color: white; cursor: pointer;" id="btn15" onclick="addItem15()"><i class="fa-solid fa-plus"></i></button>
-            <i class="fa-solid fa-spinner" style="font-size: 50px; display: none;" id="loaderBtn15"></i>
+    <div id="purchase" style="width: 100%; height: 100%; top: 0; bottom: 0; left: 0; right: 0; position: fixed; opacity: 0; display: none; overflow-y: scroll; background-color: white;">
+        <p style="font-size: 30px; margin-top: 100px; margin-bottom: 30px;" id="pavadinimaiPrekiu"><i class="fa-solid fa-cart-plus"></i> Naujas pirkimas:</p>
+        <p style="font-size: 30px;" id="kainosIrPavadinimai"><i class="fa-solid fa-barcode"></i> Iveskite prekes pavadinimus ir kainas:</p>
+        <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; position: fixed; bottom: 15px; left: 15px; cursor: pointer;" id="purchaseOk" onclick="completePurchase()"><i class="fa-solid fa-check"></i></button>
+        <div style="width: 400px; height: 200px; border: 5px solid black; position: fixed; border-radius: 25px; left: -415px; background-color: white; bottom: 15px; z-index: 1; display: flex; justify-content: center; align-items: center; flex-direction: column;" id="completion">
+            <p style="font-size: 30px; position: absolute;" id="loadAmountMoney"><i class="fa-solid fa-circle-notch" style="animation: spin 1s linear infinite;"></i> Skaiciuojama suma...</p>
+            <div style="display: flex; justify-content: space-around; align-items: center; flex-direction: column; width: 100%; height: 200px; opacity: 0;" id="nowComp">
+                <p>Iveskite sia suma i korteliu skaitytuva.</p>
+                <p>Uzbaikite pirkima.</p>
+                <div>
+                <input type="number" style="width: 130px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px; pointer-events: none; user-select: none; padding: 5px;" value="suma" placeholder="Suma" id="pirkimasTxt">
+                <i class="fa-solid fa-euro-sign" style="position: absolute; margin-left: -36px; margin-top: 7.5px; background-color: white; font-size: 25px; padding: 5px; border-radius: 0 100% 100% 0;"></i>
+                <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; cursor: pointer;" id="purchaseAfterBtn" onclick="completeAfter()"><i class="fa-solid fa-check"></i></button>
+                </div>
+            </div>
         </div>
 
-        <i class="fa-regular fa-circle-check" style="font-size: 50px; margin-top: 20px; cursor: pointer; display: none;" id="pirkimasOk" onclick="pabaigtiPirkima()"></i>
-        <i class="fa-solid fa-spinner" style="font-size: 50px; display: none; margin-top: 20px;" id="loaderPaymentOk"></i>
-        <i class="fa-regular fa-circle-xmark" style="font-size: 50px; margin-top: 20px; cursor: pointer;" id="cancelled" onclick="paymentCancel()"></i>
-
-        <div id="pirkimoViskas" style="width: 500px; height: 250px; display: none; justify-content: space-around; align-items: center; flex-direction: column; margin: 50px; border: 2px solid black; border-radius: 100px;">
-            <p>is viso:</p>
-            <input type="text" id="pirkimasTxt" style="width: 200px; pointer-events: none; height: 50px; border-radius: 100px; border: 2px solid black; font-size: 30px; text-align: center;" placeholder="suma">
-            <p style="margin-top: 30px;">iveskite sia suma i korteliu skaitytuva ir uzbaikite mokejima.</p>
-            <button style="width: 200px; height: 50px; border-radius: 50px; border: none; background-color: black; font-size: 25px; cursor: pointer; color: white; opacity: 0; pointer-events: none;" id="btnForPay" onclick="paymentOkNow()"><i class="fa-regular fa-circle-check"></i> complete</button>
-        </div>
+        <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; position: fixed; bottom: 15px; right: 15px; cursor: pointer;" id="addItem1" onclick="itemAdd1()"><i class="fa-solid fa-plus"></i></button>
+        <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; position: fixed; bottom: 15px; right: 15px; cursor: pointer; display: none;" id="addItem2" onclick="itemAdd2()"><i class="fa-solid fa-plus"></i></button>
+        <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; position: fixed; bottom: 15px; right: 15px; cursor: pointer; display: none;" id="addItem3" onclick="itemAdd3()"><i class="fa-solid fa-plus"></i></button>
+        <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; position: fixed; bottom: 15px; right: 15px; cursor: pointer; display: none;" id="addItem4" onclick="itemAdd4()"><i class="fa-solid fa-plus"></i></button>
+        <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; position: fixed; bottom: 15px; right: 15px; cursor: pointer; display: none;" id="addItem5" onclick="itemAdd5()"><i class="fa-solid fa-plus"></i></button>
+        <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; position: fixed; bottom: 15px; right: 15px; cursor: pointer; display: none;" id="addItem6" onclick="itemAdd6()"><i class="fa-solid fa-plus"></i></button>
+        <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; position: fixed; bottom: 15px; right: 15px; cursor: pointer; display: none;" id="addItem7" onclick="itemAdd7()"><i class="fa-solid fa-plus"></i></button>
+        <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; position: fixed; bottom: 15px; right: 15px; cursor: pointer; display: none;" id="addItem8" onclick="itemAdd8()"><i class="fa-solid fa-plus"></i></button>
+        <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; position: fixed; bottom: 15px; right: 15px; cursor: pointer; display: none;" id="addItem9" onclick="itemAdd9()"><i class="fa-solid fa-plus"></i></button>
+        <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; position: fixed; bottom: 15px; right: 15px; cursor: pointer; display: none;" id="addItem10" onclick="itemAdd10()"><i class="fa-solid fa-plus"></i></button>
+        <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; position: fixed; bottom: 15px; right: 15px; cursor: pointer; display: none;" id="addItem11" onclick="itemAdd11()"><i class="fa-solid fa-plus"></i></button>
+        <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; position: fixed; bottom: 15px; right: 15px; cursor: pointer; display: none;" id="addItem12" onclick="itemAdd12()"><i class="fa-solid fa-plus"></i></button>
+        <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; position: fixed; bottom: 15px; right: 15px; cursor: pointer; display: none;" id="addItem13" onclick="itemAdd13()"><i class="fa-solid fa-plus"></i></button>
+        <button style="width: 50px; height: 50px; border: 5px solid black; background-color: white; border-radius: 100%; font-size: 25px; position: fixed; bottom: 15px; right: 15px; cursor: pointer; display: none;" id="addItem14" onclick="itemAdd14()"><i class="fa-solid fa-plus"></i></button>
+        <div id="prekes1" style="width: 450px; display: flex; justify-content: space-around; align-items: center; margin: 30px auto; margin-top: 70px;"><p style="font-size: 25px;">1.</p><input type="text" style="width: 300px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Prekes pavadinimas"><input type="number" style="width: 100px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Kaina" id="inputeBtn1"></div>
+        <div id="prekes2" style="width: 450px; justify-content: space-around; align-items: center; margin: 30px auto; opacity: 0; display: none;"><p style="font-size: 25px;">2.</p><input type="text" style="width: 300px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Prekes pavadinimas"><input type="number" style="width: 100px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Kaina" id="inputeBtn2"></div>
+        <div id="prekes3" style="width: 450px; justify-content: space-around; align-items: center; margin: 30px auto; opacity: 0; display: none;"><p style="font-size: 25px;">3.</p><input type="text" style="width: 300px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Prekes pavadinimas"><input type="number" style="width: 100px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Kaina" id="inputeBtn3"></div>
+        <div id="prekes4" style="width: 450px; justify-content: space-around; align-items: center; margin: 30px auto; opacity: 0; display: none;"><p style="font-size: 25px;">4.</p><input type="text" style="width: 300px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Prekes pavadinimas"><input type="number" style="width: 100px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Kaina" id="inputeBtn4"></div>
+        <div id="prekes5" style="width: 450px; justify-content: space-around; align-items: center; margin: 30px auto; opacity: 0; display: none;"><p style="font-size: 25px;">5.</p><input type="text" style="width: 300px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Prekes pavadinimas"><input type="number" style="width: 100px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Kaina" id="inputeBtn5"></div>
+        <div id="prekes6" style="width: 450px; justify-content: space-around; align-items: center; margin: 30px auto; opacity: 0; display: none;"><p style="font-size: 25px;">6.</p><input type="text" style="width: 300px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Prekes pavadinimas"><input type="number" style="width: 100px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Kaina" id="inputeBtn6"></div>
+        <div id="prekes7" style="width: 450px; justify-content: space-around; align-items: center; margin: 30px auto; opacity: 0; display: none;"><p style="font-size: 25px;">7.</p><input type="text" style="width: 300px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Prekes pavadinimas"><input type="number" style="width: 100px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Kaina" id="inputeBtn7"></div>
+        <div id="prekes8" style="width: 450px; justify-content: space-around; align-items: center; margin: 30px auto; opacity: 0; display: none;"><p style="font-size: 25px;">8.</p><input type="text" style="width: 300px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Prekes pavadinimas"><input type="number" style="width: 100px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Kaina" id="inputeBtn8"></div>
+        <div id="prekes9" style="width: 450px; justify-content: space-around; align-items: center; margin: 30px auto; opacity: 0; display: none;"><p style="font-size: 25px;">9.</p><input type="text" style="width: 300px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Prekes pavadinimas"><input type="number" style="width: 100px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Kaina" id="inputeBtn9"></div>
+        <div id="prekes10" style="width: 450px; justify-content: space-around; align-items: center; margin: 30px auto; opacity: 0; display: none;"><p style="font-size: 25px;">10.</p><input type="text" style="width: 300px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Prekes pavadinimas"><input type="number" style="width: 100px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Kaina" id="inputeBtn10"></div>
+        <div id="prekes11" style="width: 450px; justify-content: space-around; align-items: center; margin: 30px auto; opacity: 0; display: none;"><p style="font-size: 25px;">11.</p><input type="text" style="width: 300px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Prekes pavadinimas"><input type="number" style="width: 100px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Kaina" id="inputeBtn11"></div>
+        <div id="prekes12" style="width: 450px; justify-content: space-around; align-items: center; margin: 30px auto; opacity: 0; display: none;"><p style="font-size: 25px;">12.</p><input type="text" style="width: 300px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Prekes pavadinimas"><input type="number" style="width: 100px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Kaina" id="inputeBtn12"></div>
+        <div id="prekes13" style="width: 450px; justify-content: space-around; align-items: center; margin: 30px auto; opacity: 0; display: none;"><p style="font-size: 25px;">13.</p><input type="text" style="width: 300px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Prekes pavadinimas"><input type="number" style="width: 100px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Kaina" id="inputeBtn13"></div>
+        <div id="prekes14" style="width: 450px; justify-content: space-around; align-items: center; margin: 30px auto; opacity: 0; display: none;"><p style="font-size: 25px;">14.</p><input type="text" style="width: 300px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Prekes pavadinimas"><input type="number" style="width: 100px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Kaina" id="inputeBtn14"></div>
+        <div id="prekes15" style="width: 450px; justify-content: space-around; align-items: center; margin: 30px auto; opacity: 0; display: none;"><p style="font-size: 25px;">15.</p><input type="text" style="width: 300px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Prekes pavadinimas"><input type="number" style="width: 100px; height: 50px; border: 5px solid black; color: black; border-radius: 50px; font-size: 25px;" placeholder="Kaina" id="inputeBtn15"></div>
     </div>
-    <input type="text" style="display: none;" value="€" id="euro">
     <script src="https://kit.fontawesome.com/a11707644f.js" crossorigin="anonymous"></script>
     <script>
         function loadFunction() {
         setTimeout(() => {
-            document.getElementById("register").style.display = "block";
-        }, 1000);
+            document.getElementById("wallet").style.opacity = "1";
+        }, 2000);
         setTimeout(() => {
-            document.getElementById("register").style.display = "none";
-            document.getElementById("loader").style.display = "block";
-            document.getElementById("loader").style.animation = "rotate 1s linear infinite";
-        }, 6000);
+            document.getElementById("createdByMatas").style.opacity = "1";
+        }, 3000);
         setTimeout(() => {
-            document.getElementById("loader").style.display = "none";
-            document.getElementById("userSelect").style.display = "flex";
-            document.getElementById("loader").style.animation = "none";
-            document.getElementById("pUser").style.display = "block";
+            document.getElementById("raide14").style.opacity = "0";
+        }, 8600);
+        setTimeout(() => {
+            document.getElementById("raide13").style.opacity = "0";
+        }, 8700);
+        setTimeout(() => {
+            document.getElementById("raide12").style.opacity = "0";
+        }, 8800);
+        setTimeout(() => {
+            document.getElementById("raide11").style.opacity = "0";
+        }, 8900);
+        setTimeout(() => {
+            document.getElementById("raide10").style.opacity = "0";
+        }, 9000);
+        setTimeout(() => {
+            document.getElementById("raide9").style.opacity = "0";
+        }, 9100);
+        setTimeout(() => {
+            document.getElementById("raide8").style.opacity = "0";
+        }, 9200);
+        setTimeout(() => {
+            document.getElementById("raide7").style.opacity = "0";
+        }, 9300);
+        setTimeout(() => {
+            document.getElementById("raide6").style.opacity = "0";
+        }, 9400);
+        setTimeout(() => {
+            document.getElementById("raide5").style.opacity = "0";
+        }, 9500);
+        setTimeout(() => {
+            document.getElementById("raide4").style.opacity = "0";
+        }, 9600);
+        setTimeout(() => {
+            document.getElementById("raide3").style.opacity = "0";
+        }, 9700);
+        setTimeout(() => {
+            document.getElementById("raide2").style.opacity = "0";
+        }, 9800);
+        setTimeout(() => {
+            document.getElementById("raide1").style.opacity = "0";
+        }, 9900);
+        setTimeout(() => {
+            document.getElementById("wallet").style.opacity = "0";
+            document.getElementById("spin").style.opacity = "1";
+            document.getElementById("createdByMatas").style.display = "none";
+        }, 10000);
+        setTimeout(() => {
+            document.getElementById("wallet").style.display = "none";
+            document.getElementById("wallet").style.animation = "none";
+        }, 10300);
+        setTimeout(() => {
+            document.getElementById("selection").style.display = "flex";
             document.getElementById("power").style.display = "block";
-        }, 15000);
-      }
-      function powerOff() {
-        document.getElementById("powerConfirm").style.display = "flex";
+        }, 19950);
         setTimeout(() => {
-            document.getElementById("powerConfirm").style.display = "none";
-        }, 5000);
-      }
-      function powerOffNow() {
-        document.getElementById("powerConfirm").style.display = "none";
-        document.getElementById("power").style.display = "none";
-        document.getElementById("pUser").style.display = "none";
-        document.getElementById("userSelect").style.display = "none";
-        document.getElementById("loader").style.display = "block";
-        document.getElementById("loader").style.animation = "rotate 1s linear infinite";
+            document.getElementById("spin").style.opacity = "0";
+            document.getElementById("selection").style.opacity = "1";
+            document.getElementById("power").style.opacity = "1";
+        }, 20000);
         setTimeout(() => {
-            location.replace("index.html");
-        }, 5000);
+            document.getElementById("spin").style.display = "none";
+        }, 20300);
       }
-      function addUserNow() {
-        document.getElementById("userThis").style.display = "none";
-        document.getElementById("pUserSwitch").style.display = "block";
-        document.getElementById("pUser").style.display = "none";
-        document.getElementById("userPlus").style.pointerEvents = "none";
-        document.getElementById("loader2").style.animation = "rotate 1s linear infinite";
-        document.getElementById("power").style.display = "none";
-        document.getElementById("powerConfirm").style.display = "none";
+      function userAdd() {
+        document.getElementById("confirmRestart").style.right = "-170px";
+        document.getElementById("power").style.opacity = "0";
+        document.getElementById("select").style.opacity = "0";
+        document.getElementById("select").style.pointerEvents = "none";
+        document.getElementById("add").style.pointerEvents = "none";
+        document.getElementById("select").style.width = "0";
+        document.getElementById("add").style.marginLeft = "-170px";
+        setTimeout(() => {
+            document.getElementById("switchingUserP").style.display = "block";
+            document.getElementById("selectUserP").style.display = "none";
+            document.getElementById("power").style.display = "none";
+        }, 300);
         setTimeout(() => {
             document.getElementById("error").style.display = "flex";
-            document.getElementById("loader2").style.animation = "none";
-        }, 5000);
-      }
-      function restart() {
-        document.getElementById("error").style.display = "none";
-        document.getElementById("userPlus").style.display = "none";
-        document.getElementById("pUserSwitch").style.display = "none";
-        document.getElementById("loader").style.display = "block";
-        document.getElementById("loader").style.animation = "rotate 1s linear infinite";
-        setTimeout(() => {
-            location.replace("index.html");
-        }, 5000);
-      }
-      function selectUserNow() {
-        document.getElementById("userPlus").style.display = "none";
-        document.getElementById("pUserSwitch").style.display = "block";
-        document.getElementById("pUser").style.display = "none";
-        document.getElementById("userThis").style.pointerEvents = "none";
-        document.getElementById("loader2").style.animation = "rotate 1s linear infinite";
-        document.getElementById("power").style.display = "none";
-        document.getElementById("powerConfirm").style.display = "none";
-        setTimeout(() => {
-            document.getElementById("userSelect").style.display = "none";
-            document.getElementById("loader2").style.animation = "none";
-            document.getElementById("pUserSwitch").style.display = "none";
-            document.getElementById("loading").style.display = "none";
             document.getElementById("power").style.display = "block";
-        }, 5000);
-      }
-      function userOn() {
-        document.getElementById("loader3").style.display = "block";
-        document.getElementById("loader3").style.animation = "rotate 1s linear infinite";
-        document.getElementById("zmogus").style.pointerEvents = "none";
+        }, 14950);
         setTimeout(() => {
-            document.getElementById("loading").style.display = "flex";
-            document.getElementById("loader3").style.display = "none";
-            document.getElementById("loader3").style.animation = "none";
-            document.getElementById("zmogus").style.pointerEvents = "all";
-            document.getElementById("pUser").style.display = "block";
-            document.getElementById("userPlus").style.display = "flex";
-            document.getElementById("userThis").style.display = "flex";
-            document.getElementById("userPlus").style.pointerEvents = "all";
-            document.getElementById("userThis").style.pointerEvents = "all";
-            document.getElementById("userSelect").style.display = "flex";
-            document.getElementById("main").style.display = "none";
-            document.getElementById("helperis").style.display = "none";
-            document.getElementById("closed").style.display = "flex";
-            document.getElementById("cardWarning").style.display = "none";
-            document.getElementById("needCardReader").style.opacity = "0";
-            document.getElementById("needCardReader").style.pointerEvents = "none";
-        }, 5000);
+            document.getElementById("switchingUserP").style.display = "none";
+            document.getElementById("selectUserP").style.display = "block";
+            document.getElementById("select").style.opacity = "1";
+            document.getElementById("select").style.width = "120px";
+            document.getElementById("add").style.marginLeft = "0";
+            document.getElementById("error").style.opacity = "1";
+            document.getElementById("power").style.opacity = "1";
+            document.title = "840320_n0_r1ght5";
+        }, 15000);
       }
-      function userOn2() {
-        document.getElementById("loader").style.display = "block";
-        document.getElementById("loader").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loading").style.display = "flex";
+      function userChoose() {
+        document.getElementById("confirmRestart").style.right = "-170px";
+        document.getElementById("power").style.opacity = "0";
+        document.getElementById("add").style.opacity = "0";
+        document.getElementById("add").style.pointerEvents = "none";
+        document.getElementById("select").style.pointerEvents = "none";
+        document.getElementById("add").style.width = "0";
+        document.getElementById("select").style.marginLeft = "60px";
+        setTimeout(() => {
+            document.getElementById("switchingUserP").style.display = "block";
+            document.getElementById("selectUserP").style.display = "none";
             document.getElementById("power").style.display = "none";
+        }, 300);
+        setTimeout(() => {
+            document.getElementById("power").style.display = "block";
+        }, 6950);
+        setTimeout(() => {
+            document.getElementById("switchingUserP").style.display = "none";
+            document.getElementById("selectUserP").style.display = "block";
+            document.getElementById("add").style.opacity = "1";
+            document.getElementById("add").style.width = "120px";
+            document.getElementById("select").style.marginLeft = "0";
+            document.getElementById("add").style.pointerEvents = "all";
+            document.getElementById("select").style.pointerEvents = "all";
+            document.getElementById("power").style.opacity = "1";
+            document.getElementById("start").style.opacity = "0";
+            document.getElementById("loadRegister").style.display = "flex";
+            document.getElementById("userCashAuto").style.left = "50px";
+            document.title = "Pardavejas";
+        }, 7000);
+        setTimeout(() => {
+            document.getElementById("userCashAuto").style.left = "10px";
+        }, 7200);
+        setTimeout(() => {
+            document.getElementById("userCashAuto").style.left = "50px";
+        }, 11900);
+        setTimeout(() => {
+            document.getElementById("userCashAuto").style.left = "-470px";
+        }, 12000);
+        setTimeout(() => {
+            document.getElementById("start").style.display = "none";
+        }, 7300);
+        setTimeout(() => {
+            document.getElementById("loadRegister").style.opacity = "1";
+        }, 8000);
+        setTimeout(() => {
+            document.getElementById("loadRegister").style.opacity = "0";
+            document.getElementById("registerClosed").style.display = "flex";
+            document.getElementById("selectLoadBtn").style.display = "block";
+            document.getElementById("selectLoadBtn").style.pointerEvents = "all";
+        }, 14700);
+        setTimeout(() => {
+            document.getElementById("loadRegister").style.display = "none";
+            document.getElementById("registerClosed").style.opacity = "1";
+            document.getElementById("selectLoadBtn").style.opacity = "1";
+        }, 15000);
       }
-      function openCash() {
-        document.getElementById("loader4").style.display = "block";
-        document.getElementById("loader4").style.animation = "rotate 1s linear infinite";
-        document.getElementById("opener").style.pointerEvents = "none";
-        document.getElementById("zmogus").style.pointerEvents = "none";
+      function question() {
+        document.getElementById("confirmRestart").style.right = "10px";
+        document.getElementById("power").style.opacity = "0";
         setTimeout(() => {
-            document.getElementById("closed").style.display = "none";
-            document.getElementById("loader4").style.display = "none";
-            document.getElementById("loader4").style.animation = "none";
-            document.getElementById("opener").style.pointerEvents = "all";
-            document.getElementById("cardWarning").style.display = "flex";
-            document.getElementById("zmogus").style.pointerEvents = "all";
+            document.getElementById("confirmRestart").style.right = "-170px";
+            document.getElementById("power").style.opacity = "1";
         }, 5000);
+      }
+      function restartNow() {
+        document.getElementById("confirmRestart").style.right = "-170px";
+        document.title = "Cash register";
+        document.getElementById("power").style.opacity = "0";
+        document.getElementById("selection").style.opacity = "0";
+        document.getElementById("error").style.opacity = "0";
+        document.getElementById("spin").style.display = "block";
         setTimeout(() => {
-            document.getElementById("needCardReader").style.opacity = "1";
-            document.getElementById("needCardReader").style.pointerEvents = "all";
+            document.getElementById("spin").style.opacity = "1";
+        }, 50);
+        setTimeout(() => {
+            document.getElementById("power").style.display = "none";
+            document.getElementById("selection").style.display = "none";
+            document.getElementById("error").style.display = "none";
+        }, 300);
+        setTimeout(() => {
+            document.getElementById("spin").style.opacity = "0";
+        }, 9500);
+        setTimeout(() => {
+            location.replace("index.html")
         }, 10000);
       }
-      function ok() {
-        document.getElementById("cardWarning").style.display = "none";
-        document.getElementById("main").style.display = "flex";
-        document.getElementById("needCardReader").style.opacity = "0";
-        document.getElementById("needCardReader").style.pointerEvents = "none";
-      }
-      function helpNow() {
-        document.getElementById("zmogus").style.pointerEvents = "none";
-        document.getElementById("pagalbele").style.pointerEvents = "none";
-        document.getElementById("closer").style.pointerEvents = "none";
-        document.getElementById("paymentStarter").style.pointerEvents = "none";
-        document.getElementById("loader5").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loader5").style.display = "block";
+      function openCash() {
+        document.getElementById("openBtn").style.opacity = "0";
+        document.getElementById("disableClick").style.display = "block";
         setTimeout(() => {
-            document.getElementById("zmogus").style.pointerEvents = "all";
-            document.getElementById("helperis").style.display = "flex";
-            document.getElementById("loader5").style.display = "none";
-            document.getElementById("pagalbele").style.pointerEvents = "all";
-            document.getElementById("loader5").style.animation = "none";
-            document.getElementById("closer").style.pointerEvents = "all";
-            document.getElementById("paymentStarter").style.pointerEvents = "all";
+            document.getElementById("openBtn").style.pointerEvents = "none";
+            document.getElementById("loadingOpen").style.display = "block";
+            document.getElementById("kasaUzdaryta").style.display = "none";
+            document.getElementById("openBtn").style.height = "0";
+        }, 300);
+        setTimeout(() => {
+            document.getElementById("loadingOpen").style.marginBottom = "0";
+        }, 350);
+        setTimeout(() => {
+            document.getElementById("registerClosed").style.opacity = "0";
+            document.getElementById("disableClick").style.display = "none";
+        }, 5000);
+        setTimeout(() => {
+            document.getElementById("cardReader").style.display = "flex";
+        }, 5250);
+        setTimeout(() => {
+            document.getElementById("cardReader").style.opacity = "1";
+            document.getElementById("registerClosed").style.display = "none";
+            document.getElementById("openBtn").style.pointerEvents = "all";
+            document.getElementById("loadingOpen").style.display = "none";
+            document.getElementById("loadingOpen").style.marginBottom = "50px";
+            document.getElementById("kasaUzdaryta").style.display = "block";
+            document.getElementById("openBtn").style.height = "50px";
+            document.getElementById("openBtn").style.opacity = "1";
+        }, 5300);
+        setTimeout(() => {
+            document.getElementById("okBtn").style.opacity = "1";
+            document.getElementById("okBtn").style.pointerEvents = "all";
+        }, 8300);
+      }
+      function openSuccess() {
+        document.getElementById("cardReader").style.opacity = "0";
+        document.getElementById("registerOpen").style.display = "flex";
+        setTimeout(() => {
+            document.getElementById("cardReader").style.display = "none";
+            document.getElementById("okBtn").style.opacity = "0";
+            document.getElementById("okBtn").style.pointerEvents = "none";
+            document.getElementById("registerOpen").style.opacity = "1";
+        }, 300);
+        document.getElementById("openedCashAuto").style.left = "50px";
+        setTimeout(() => {
+            document.getElementById("openedCashAuto").style.left = "10px";
+        }, 200);
+        setTimeout(() => {
+            document.getElementById("openedCashAuto").style.left = "50px";
+        }, 4900);
+        setTimeout(() => {
+            document.getElementById("openedCashAuto").style.left = "-320px";
         }, 5000);
       }
-        function closeCash() {
-        document.getElementById("closer").style.pointerEvents = "none";
-        document.getElementById("paymentStarter").style.pointerEvents = "none";
-        document.getElementById("loader6").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loader6").style.display = "block";
-        document.getElementById("zmogus").style.pointerEvents = "none";
+      function loadSelect() {
+        document.getElementById("selectLoadBtn").style.opacity = "0";
+        document.getElementById("selectLoadBtn").style.pointerEvents = "none";
+        document.getElementById("loadUserSelect").style.display = "block";
+        document.getElementById("disableClick").style.display = "block";
         setTimeout(() => {
-            document.getElementById("closer").style.pointerEvents = "all";
-            document.getElementById("paymentStarter").style.pointerEvents = "all";
-            document.getElementById("loader6").style.animation = "none";
-            document.getElementById("loader6").style.display = "none";
-            document.getElementById("closed").style.display = "flex";
-            document.getElementById("main").style.display = "none";
-            document.getElementById("zmogus").style.pointerEvents = "all";
+            document.getElementById("loadUserSelect").style.opacity = "1";
+        }, 50);
+        setTimeout(() => {
+            document.getElementById("start").style.display = "flex";
+        }, 4950);
+        setTimeout(() => {
+            document.getElementById("start").style.opacity = "1";
+            document.getElementById("loadUserSelect").style.opacity = "0";
+            document.getElementById("closedCashAuto").style.left = "50px";
+            document.getElementById("disableClick").style.display = "none";
+            document.title = "Cash register";
         }, 5000);
-      }
-      function newBuyer() {
-        document.getElementById("zmogus").style.pointerEvents = "none";
-        document.getElementById("pagalbele").style.pointerEvents = "none";
-        document.getElementById("closer").style.pointerEvents = "none";
-        document.getElementById("paymentStarter").style.pointerEvents = "none";
-        document.getElementById("loaderNo").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderNo").style.display = "block";
         setTimeout(() => {
-            document.getElementById("zmogus").style.pointerEvents = "all";
-            document.getElementById("newPaymentNow").style.display = "flex";
-            document.getElementById("loaderNo").style.display = "none";
-            document.getElementById("pagalbele").style.pointerEvents = "all";
-            document.getElementById("loaderNo").style.animation = "none";
-            document.getElementById("closer").style.pointerEvents = "all";
-            document.getElementById("paymentStarter").style.pointerEvents = "all";
-            document.getElementById("main").style.display = "none";
+            document.getElementById("closedCashAuto").style.left = "10px";
+        }, 5200);
+        setTimeout(() => {
+            document.getElementById("loadUserSelect").style.display = "none";
+            document.getElementById("cardReader").style.opacity = "0";
+            document.getElementById("cardReader").style.display = "none";
+            document.getElementById("registerClosed").style.display = "none";
+            document.getElementById("registerClosed").style.opacity = "0";
+            document.getElementById("openBtn").style.pointerEvents = "all";
+            document.getElementById("loadingOpen").style.display = "none";
+            document.getElementById("loadingOpen").style.marginBottom = "50px";
+            document.getElementById("kasaUzdaryta").style.display = "block";
+            document.getElementById("openBtn").style.height = "50px";
+            document.getElementById("openBtn").style.opacity = "1";
+            document.getElementById("okBtn").style.opacity = "0";
+            document.getElementById("okBtn").style.pointerEvents = "none";
+            document.getElementById("registerOpen").style.opacity = "0";
+            document.getElementById("registerOpen").style.display = "none";
+            document.getElementById("voiceWindow").style.opacity = "0";
+            document.getElementById("voiceWindow").style.display = "none";
+        }, 5300);
+        setTimeout(() => {
+            document.getElementById("closedCashAuto").style.left = "50px";
+        }, 9900);
+        setTimeout(() => {
+            document.getElementById("closedCashAuto").style.left = "-320px";
+        }, 10000);
+      }
+      function closeRegisterNow() {
+        document.getElementById("closeRegister").style.opacity = "0";
+        document.getElementById("purchaseNew").style.opacity = "0";
+        document.getElementById("voice").style.opacity = "0";
+        document.getElementById("disableClick").style.display = "block";
+        setTimeout(() => {
+            document.getElementById("closeRegister").style.height = "0";
+            document.getElementById("voice").style.height = "0";
+            document.getElementById("purchaseNew").style.height = "0";
+            document.getElementById("closeRegister").style.marginBottom = "0";
+            document.getElementById("pasirinktiVeikla").style.display = "none";
+            document.getElementById("cashIsClosing").style.display = "block";
+        }, 300);
+        setTimeout(() => {
+            document.getElementById("cashIsClosing").style.marginBottom = "0";
+        }, 350);
+        setTimeout(() => {
+            document.getElementById("registerClosed").style.display = "flex";
+            document.getElementById("registerOpen").style.opacity = "0";
+            document.getElementById("disableClick").style.display = "none";
+            document.getElementById("closedCashAuto2").style.left = "50px";
         }, 5000);
-      }
-      function paymentCancel() {
-        document.getElementById("cancelled").style.display = "none";
-        document.getElementById("loaderPaymentOk").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderPaymentOk").style.display = "block";
-        document.getElementById("zmogus").style.pointerEvents = "none";
         setTimeout(() => {
-            document.getElementById("zmogus").style.pointerEvents = "all";
-            document.getElementById("newPaymentNow").style.display = "none";
-            document.getElementById("loaderNo").style.display = "none";
-            document.getElementById("cancelled").style.display = "block";
-            document.getElementById("main").style.display = "flex";
-            document.getElementById("loaderPaymentOk").style.animation = "none";
-            document.getElementById("loaderPaymentOk").style.display = "none";
+            document.getElementById("closedCashAuto2").style.left = "10px";
+        }, 5200);
+        setTimeout(() => {
+            document.getElementById("registerClosed").style.opacity = "1";
+            document.getElementById("registerOpen").style.display = "none";
+            document.getElementById("closeRegister").style.opacity = "1";
+            document.getElementById("closeRegister").style.height = "50px";
+            document.getElementById("voice").style.opacity = "1";
+            document.getElementById("voice").style.height = "50px";
+            document.getElementById("closeRegister").style.marginBottom = "20px";
+            document.getElementById("pasirinktiVeikla").style.display = "block";
+            document.getElementById("cashIsClosing").style.display = "none";
+            document.getElementById("cashIsClosing").style.marginBottom = "50px";
+        }, 5300);
+        setTimeout(() => {
+            document.getElementById("closedCashAuto2").style.left = "50px";
+        }, 9900);
+        setTimeout(() => {
+            document.getElementById("closedCashAuto2").style.left = "-320px";
+        }, 10000);
+      }
+      function voicePackOpen() {
+        document.getElementById("closeRegister").style.opacity = "0";
+        document.getElementById("voice").style.opacity = "0";
+        document.getElementById("purchaseNew").style.opacity = "0";
+        document.getElementById("disableClick").style.display = "block";
+        setTimeout(() => {
+            document.getElementById("closeRegister").style.height = "0";
+            document.getElementById("voice").style.height = "0";
+            document.getElementById("purchaseNew").style.height = "0";
+            document.getElementById("closeRegister").style.marginBottom = "0";
+            document.getElementById("pasirinktiVeikla").style.display = "none";
+            document.getElementById("voiceLoad").style.display = "block";
+        }, 300);
+        setTimeout(() => {
+            document.getElementById("voiceLoad").style.marginBottom = "0";
+        }, 350);
+        setTimeout(() => {
+            document.getElementById("voiceWindow").style.display = "flex";
+            document.getElementById("disableClick").style.display = "none";
         }, 5000);
-      }
-      function neveikia() {
-        document.getElementById("uzdarytiPagalba").style.pointerEvents = "none";
-        document.getElementById("sistemaNeveikia").style.pointerEvents = "none";
-        document.getElementById("sistemaPatarimai").style.pointerEvents = "none";
-        document.getElementById("sistemaPakeisti").style.pointerEvents = "none";
-        document.getElementById("sistemaKita").style.pointerEvents = "none";
-        document.getElementById("loaderNotWork").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderNotWork").style.display = "block";
-        document.getElementById("zmogus").style.pointerEvents = "none";
         setTimeout(() => {
+            document.getElementById("voiceWindow").style.opacity = "1";
+            document.getElementById("closeRegister").style.opacity = "1";
+            document.getElementById("closeRegister").style.height = "50px";
+            document.getElementById("voice").style.opacity = "1";
+            document.getElementById("voice").style.height = "50px";
+            document.getElementById("closeRegister").style.marginBottom = "20px";
+            document.getElementById("pasirinktiVeikla").style.display = "block";
+            document.getElementById("voiceLoad").style.display = "none";
+            document.getElementById("voiceLoad").style.marginBottom = "50px";
+        }, 5300);
+      }
+      function voicePackClose() {
+        document.getElementById("voiceWindow").style.opacity = "0";
+        setTimeout(() => {
+            document.getElementById("voiceWindow").style.display = "none";
+        }, 300);
+      }
+      function playSystem() {
+        document.getElementById("voicesSystem").style.opacity = "0.2";
+        document.getElementById("disableClick").style.display = "block";
+        document.getElementById("voiceCloser").style.opacity = "0";
+        setTimeout(() => {
+            document.getElementById("playing").style.left = "25px";
             document.getElementById("ding").play();
-            document.getElementById("loaderNotWork").style.display = "none";
-            document.getElementById("sistemaNeveikia").style.animation = "blink 1s linear infinite";
-            document.getElementById("loaderNotWork").style.animation = "none";
-        }, 5000);
+        }, 600);
         setTimeout(() => {
-            document.getElementById("ding").pause();
+            document.getElementById("playing").style.left = "-50px";
+        }, 2600);
+        setTimeout(() => {
+            document.getElementById("playingDot").style.opacity = "1";
+        }, 2800);
+        setTimeout(() => {
             document.getElementById("help1").play();
-            document.getElementById('ding').currentTime = 0;
-        }, 8000);
+        }, 3000);
       }
       var audio1 = document.getElementById("help1");
         audio1.onended = function() {
-            document.getElementById("sistemaNeveikia").style.pointerEvents = "all";
-            document.getElementById("sistemaNeveikia").style.animation = "none";
-            document.getElementById("sistemaPatarimai").style.pointerEvents = "all";
-            document.getElementById("sistemaPatarimai").style.animation = "none";
-            document.getElementById("sistemaPakeisti").style.pointerEvents = "all";
-            document.getElementById("sistemaPakeisti").style.animation = "none";
-            document.getElementById("sistemaKita").style.pointerEvents = "all";
-            document.getElementById("sistemaKita").style.animation = "none";
-            document.getElementById("uzdarytiPagalba").style.pointerEvents = "all";
-            document.getElementById("zmogus").style.pointerEvents = "all";
+            document.getElementById("playingDot").style.opacity = "0";
+            document.getElementById("disableClick").style.display = "none";
+            document.getElementById("voiceCloser").style.opacity = "1";
+            document.getElementById("voicesSystem").style.opacity = "1";
         };
-        function patarimai() {
-        document.getElementById("uzdarytiPagalba").style.pointerEvents = "none";
-        document.getElementById("sistemaNeveikia").style.pointerEvents = "none";
-        document.getElementById("sistemaPatarimai").style.pointerEvents = "none";
-        document.getElementById("sistemaPakeisti").style.pointerEvents = "none";
-        document.getElementById("sistemaKita").style.pointerEvents = "none";
-        document.getElementById("loaderAdvice").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderAdvice").style.display = "block";
-        document.getElementById("zmogus").style.pointerEvents = "none";
+        function playAdvice() {
+        document.getElementById("voicesAdvice").style.opacity = "0.2";
+        document.getElementById("disableClick").style.display = "block";
+        document.getElementById("voiceCloser").style.opacity = "0";
         setTimeout(() => {
+            document.getElementById("playing").style.left = "25px";
             document.getElementById("ding").play();
-            document.getElementById("loaderAdvice").style.display = "none";
-            document.getElementById("sistemaPatarimai").style.animation = "blink 1s linear infinite";
-            document.getElementById("loaderAdvice").style.animation = "none";
-        }, 5000);
+        }, 600);
         setTimeout(() => {
-            document.getElementById("ding").pause();
+            document.getElementById("playing").style.left = "-50px";
+        }, 2600);
+        setTimeout(() => {
+            document.getElementById("playingDot").style.opacity = "1";
+        }, 2800);
+        setTimeout(() => {
             document.getElementById("help2").play();
-            document.getElementById('ding').currentTime = 0;
-        }, 8000);
+        }, 3000);
       }
       var audio2 = document.getElementById("help2");
         audio2.onended = function() {
-            document.getElementById("sistemaNeveikia").style.pointerEvents = "all";
-            document.getElementById("sistemaNeveikia").style.animation = "none";
-            document.getElementById("sistemaPatarimai").style.pointerEvents = "all";
-            document.getElementById("sistemaPatarimai").style.animation = "none";
-            document.getElementById("sistemaPakeisti").style.pointerEvents = "all";
-            document.getElementById("sistemaPakeisti").style.animation = "none";
-            document.getElementById("sistemaKita").style.pointerEvents = "all";
-            document.getElementById("sistemaKita").style.animation = "none";
-            document.getElementById("uzdarytiPagalba").style.pointerEvents = "all";
-            document.getElementById("zmogus").style.pointerEvents = "all";
+            document.getElementById("playingDot").style.opacity = "0";
+            document.getElementById("disableClick").style.display = "none";
+            document.getElementById("voiceCloser").style.opacity = "1";
+            document.getElementById("voicesAdvice").style.opacity = "1";
         };
-        function pakeisti() {
-        document.getElementById("uzdarytiPagalba").style.pointerEvents = "none";
-        document.getElementById("sistemaNeveikia").style.pointerEvents = "none";
-        document.getElementById("sistemaPatarimai").style.pointerEvents = "none";
-        document.getElementById("sistemaPakeisti").style.pointerEvents = "none";
-        document.getElementById("sistemaKita").style.pointerEvents = "none";
-        document.getElementById("loaderChange").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderChange").style.display = "block";
-        document.getElementById("zmogus").style.pointerEvents = "none";
+        function playWorker() {
+        document.getElementById("voicesWorker").style.opacity = "0.2";
+        document.getElementById("disableClick").style.display = "block";
+        document.getElementById("voiceCloser").style.opacity = "0";
         setTimeout(() => {
+            document.getElementById("playing").style.left = "25px";
             document.getElementById("ding").play();
-            document.getElementById("loaderChange").style.display = "none";
-            document.getElementById("sistemaPakeisti").style.animation = "blink 1s linear infinite";
-            document.getElementById("loaderChange").style.animation = "none";
-        }, 5000);
+        }, 600);
         setTimeout(() => {
-            document.getElementById("ding").pause();
+            document.getElementById("playing").style.left = "-50px";
+        }, 2600);
+        setTimeout(() => {
+            document.getElementById("playingDot").style.opacity = "1";
+        }, 2800);
+        setTimeout(() => {
             document.getElementById("help3").play();
-            document.getElementById('ding').currentTime = 0;
-        }, 8000);
+        }, 3000);
       }
       var audio3 = document.getElementById("help3");
         audio3.onended = function() {
-            document.getElementById("sistemaNeveikia").style.pointerEvents = "all";
-            document.getElementById("sistemaNeveikia").style.animation = "none";
-            document.getElementById("sistemaPatarimai").style.pointerEvents = "all";
-            document.getElementById("sistemaPatarimai").style.animation = "none";
-            document.getElementById("sistemaPakeisti").style.pointerEvents = "all";
-            document.getElementById("sistemaPakeisti").style.animation = "none";
-            document.getElementById("sistemaKita").style.pointerEvents = "all";
-            document.getElementById("sistemaKita").style.animation = "none";
-            document.getElementById("uzdarytiPagalba").style.pointerEvents = "all";
-            document.getElementById("zmogus").style.pointerEvents = "all";
+            document.getElementById("playingDot").style.opacity = "0";
+            document.getElementById("disableClick").style.display = "none";
+            document.getElementById("voiceCloser").style.opacity = "1";
+            document.getElementById("voicesWorker").style.opacity = "1";
         };
-        function kita() {
-        document.getElementById("uzdarytiPagalba").style.pointerEvents = "none";
-        document.getElementById("sistemaNeveikia").style.pointerEvents = "none";
-        document.getElementById("sistemaPatarimai").style.pointerEvents = "none";
-        document.getElementById("sistemaPakeisti").style.pointerEvents = "none";
-        document.getElementById("sistemaKita").style.pointerEvents = "none";
-        document.getElementById("loaderOther").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderOther").style.display = "block";
-        document.getElementById("zmogus").style.pointerEvents = "none";
+        function playOther() {
+        document.getElementById("voicesOther").style.opacity = "0.2";
+        document.getElementById("disableClick").style.display = "block";
+        document.getElementById("voiceCloser").style.opacity = "0";
         setTimeout(() => {
+            document.getElementById("playing").style.left = "25px";
             document.getElementById("ding").play();
-            document.getElementById("loaderOther").style.display = "none";
-            document.getElementById("sistemaKita").style.animation = "blink 1s linear infinite";
-            document.getElementById("loaderOther").style.animation = "none";
-        }, 5000);
+        }, 600);
         setTimeout(() => {
-            document.getElementById("ding").pause();
+            document.getElementById("playing").style.left = "-50px";
+        }, 2600);
+        setTimeout(() => {
+            document.getElementById("playingDot").style.opacity = "1";
+        }, 2800);
+        setTimeout(() => {
             document.getElementById("help4").play();
-            document.getElementById('ding').currentTime = 0;
-        }, 8000);
+        }, 3000);
       }
       var audio4 = document.getElementById("help4");
         audio4.onended = function() {
-            document.getElementById("sistemaNeveikia").style.pointerEvents = "all";
-            document.getElementById("sistemaNeveikia").style.animation = "none";
-            document.getElementById("sistemaPatarimai").style.pointerEvents = "all";
-            document.getElementById("sistemaPatarimai").style.animation = "none";
-            document.getElementById("sistemaPakeisti").style.pointerEvents = "all";
-            document.getElementById("sistemaPakeisti").style.animation = "none";
-            document.getElementById("sistemaKita").style.pointerEvents = "all";
-            document.getElementById("sistemaKita").style.animation = "none";
-            document.getElementById("uzdarytiPagalba").style.pointerEvents = "all";
-            document.getElementById("zmogus").style.pointerEvents = "all";
+            document.getElementById("playingDot").style.opacity = "0";
+            document.getElementById("disableClick").style.display = "none";
+            document.getElementById("voiceCloser").style.opacity = "1";
+            document.getElementById("voicesOther").style.opacity = "1";
         };
-        function pagalbaClose() {
-        document.getElementById("sistemaKita").style.pointerEvents = "none";
-        document.getElementById("sistemaNeveikia").style.pointerEvents = "none";
-        document.getElementById("sistemaPatarimai").style.pointerEvents = "none";
-        document.getElementById("sistemaPakeisti").style.pointerEvents = "none";
-        document.getElementById("uzdarytiPagalba").style.pointerEvents = "none";
-        document.getElementById("loaderClose").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderClose").style.display = "block";
-        document.getElementById("zmogus").style.pointerEvents = "none";
+
+        function itemAdd1() {
+        document.getElementById("addItem1").style.backgroundColor = "black";
+        document.getElementById("addItem1").style.color = "white";
         setTimeout(() => {
-            document.getElementById("uzdarytiPagalba").style.pointerEvents = "all";
-            document.getElementById("sistemaNeveikia").style.pointerEvents = "all";
-            document.getElementById("sistemaPatarimai").style.pointerEvents = "all";
-            document.getElementById("sistemaPakeisti").style.pointerEvents = "all";
-            document.getElementById("loaderClose").style.display = "none";
-            document.getElementById("helperis").style.display = "none";
-            document.getElementById("loaderClose").style.animation = "none";
-            document.getElementById("uzdarytiPagalba").style.pointerEvents = "all";
-            document.getElementById("zmogus").style.pointerEvents = "all";
-        }, 5000);
+            document.getElementById("addItem1").style.backgroundColor = "white";
+            document.getElementById("addItem1").style.color = "black";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("prekes2").style.display = "flex";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("prekes2").style.opacity = "1";
+            document.getElementById("addItem2").style.display = "block";
+            document.getElementById("addItem1").style.display = "none";
+        }, 500);
       }
-      function addItem1() {
-        document.getElementById("btn1").style.display = "none";
-        document.getElementById("zmogus").style.display = "none";
-        document.getElementById("zmogus2").style.display = "block";
-        document.getElementById("loaderBtn1").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderBtn1").style.display = "block";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
-        document.getElementById("cancelled").style.display = "none";
+      function itemAdd2() {
+        document.getElementById("addItem2").style.backgroundColor = "black";
+        document.getElementById("addItem2").style.color = "white";
         setTimeout(() => {
-            document.getElementById("loaderBtn1").style.opacity = "0";
-            document.getElementById("loaderBtn1").style.animation = "none";
-            document.getElementById("preke1").style.border = "none";
-            document.getElementById("inputBtn1").style.border = "none";
-            document.getElementById("inputeBtn1").style.border = "none";
-            document.getElementById("preke2").style.display = "flex";
-            document.getElementById("pirkimasOk").style.display = "block";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-        }, 5000);
+            document.getElementById("addItem2").style.backgroundColor = "white";
+            document.getElementById("addItem2").style.color = "black";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("prekes3").style.display = "flex";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("prekes3").style.opacity = "1";
+            document.getElementById("addItem3").style.display = "block";
+            document.getElementById("addItem2").style.display = "none";
+        }, 500);
       }
-      function addItem2() {
-        document.getElementById("btn2").style.display = "none";
-        document.getElementById("loaderBtn2").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderBtn2").style.display = "block";
-        document.getElementById("pirkimasOk").style.opacity = "0";
-        document.getElementById("pirkimasOk").style.pointerEvents = "none";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
+      function itemAdd3() {
+        document.getElementById("addItem3").style.backgroundColor = "black";
+        document.getElementById("addItem3").style.color = "white";
         setTimeout(() => {
-            document.getElementById("loaderBtn2").style.opacity = "0";
-            document.getElementById("loaderBtn2").style.animation = "none";
-            document.getElementById("preke2").style.border = "none";
-            document.getElementById("inputBtn2").style.border = "none";
-            document.getElementById("inputeBtn2").style.border = "none";
-            document.getElementById("preke3").style.display = "flex";
-            document.getElementById("pirkimasOk").style.opacity = "1";
-            document.getElementById("pirkimasOk").style.pointerEvents = "all";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-        }, 5000);
+            document.getElementById("addItem3").style.backgroundColor = "white";
+            document.getElementById("addItem3").style.color = "black";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("prekes4").style.display = "flex";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("prekes4").style.opacity = "1";
+            document.getElementById("addItem4").style.display = "block";
+            document.getElementById("addItem3").style.display = "none";
+        }, 500);
       }
-      function addItem3() {
-        document.getElementById("btn3").style.display = "none";
-        document.getElementById("loaderBtn3").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderBtn3").style.display = "block";
-        document.getElementById("pirkimasOk").style.opacity = "0";
-        document.getElementById("pirkimasOk").style.pointerEvents = "none";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
+      function itemAdd4() {
+        document.getElementById("addItem4").style.backgroundColor = "black";
+        document.getElementById("addItem4").style.color = "white";
         setTimeout(() => {
-            document.getElementById("loaderBtn3").style.opacity = "0";
-            document.getElementById("loaderBtn3").style.animation = "none";
-            document.getElementById("preke3").style.border = "none";
-            document.getElementById("inputBtn3").style.border = "none";
-            document.getElementById("inputeBtn3").style.border = "none";
-            document.getElementById("preke4").style.display = "flex";
-            document.getElementById("pirkimasOk").style.opacity = "1";
-            document.getElementById("pirkimasOk").style.pointerEvents = "all";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-        }, 5000);
-    }
-        function addItem4() {
-        document.getElementById("btn4").style.display = "none";
-        document.getElementById("loaderBtn4").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderBtn4").style.display = "block";
-        document.getElementById("pirkimasOk").style.opacity = "0";
-        document.getElementById("pirkimasOk").style.pointerEvents = "none";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
+            document.getElementById("addItem4").style.backgroundColor = "white";
+            document.getElementById("addItem4").style.color = "black";
+        }, 150);
         setTimeout(() => {
-            document.getElementById("loaderBtn4").style.opacity = "0";
-            document.getElementById("loaderBtn4").style.animation = "none";
-            document.getElementById("preke4").style.border = "none";
-            document.getElementById("inputBtn4").style.border = "none";
-            document.getElementById("inputeBtn4").style.border = "none";
-            document.getElementById("preke5").style.display = "flex";
-            document.getElementById("pirkimasOk").style.opacity = "1";
-            document.getElementById("pirkimasOk").style.pointerEvents = "all";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-        }, 5000);
+            document.getElementById("prekes5").style.display = "flex";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("prekes5").style.opacity = "1";
+            document.getElementById("addItem5").style.display = "block";
+            document.getElementById("addItem4").style.display = "none";
+        }, 500);
       }
-      function addItem5() {
-        document.getElementById("btn5").style.display = "none";
-        document.getElementById("loaderBtn5").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderBtn5").style.display = "block";
-        document.getElementById("pirkimasOk").style.opacity = "0";
-        document.getElementById("pirkimasOk").style.pointerEvents = "none";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
+      function itemAdd5() {
+        document.getElementById("addItem5").style.backgroundColor = "black";
+        document.getElementById("addItem5").style.color = "white";
         setTimeout(() => {
-            document.getElementById("loaderBtn5").style.opacity = "0";
-            document.getElementById("loaderBtn5").style.animation = "none";
-            document.getElementById("preke5").style.border = "none";
-            document.getElementById("inputBtn5").style.border = "none";
-            document.getElementById("inputeBtn5").style.border = "none";
-            document.getElementById("preke6").style.display = "flex";
-            document.getElementById("pirkimasOk").style.opacity = "1";
-            document.getElementById("pirkimasOk").style.pointerEvents = "all";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-        }, 5000);
-    }
-    function addItem6() {
-        document.getElementById("btn6").style.display = "none";
-        document.getElementById("loaderBtn6").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderBtn6").style.display = "block";
-        document.getElementById("pirkimasOk").style.opacity = "0";
-        document.getElementById("pirkimasOk").style.pointerEvents = "none";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
+            document.getElementById("addItem5").style.backgroundColor = "white";
+            document.getElementById("addItem5").style.color = "black";
+        }, 150);
         setTimeout(() => {
-            document.getElementById("loaderBtn6").style.opacity = "0";
-            document.getElementById("loaderBtn6").style.animation = "none";
-            document.getElementById("preke6").style.border = "none";
-            document.getElementById("inputBtn6").style.border = "none";
-            document.getElementById("inputeBtn6").style.border = "none";
-            document.getElementById("preke7").style.display = "flex";
-            document.getElementById("pirkimasOk").style.opacity = "1";
-            document.getElementById("pirkimasOk").style.pointerEvents = "all";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-        }, 5000);
-    }
-        function addItem7() {
-        document.getElementById("btn7").style.display = "none";
-        document.getElementById("loaderBtn7").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderBtn7").style.display = "block";
-        document.getElementById("pirkimasOk").style.opacity = "0";
-        document.getElementById("pirkimasOk").style.pointerEvents = "none";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
+            document.getElementById("prekes6").style.display = "flex";
+        }, 450);
         setTimeout(() => {
-            document.getElementById("loaderBtn7").style.opacity = "0";
-            document.getElementById("loaderBtn7").style.animation = "none";
-            document.getElementById("preke7").style.border = "none";
-            document.getElementById("inputBtn7").style.border = "none";
-            document.getElementById("inputeBtn7").style.border = "none";
-            document.getElementById("preke8").style.display = "flex";
-            document.getElementById("pirkimasOk").style.opacity = "1";
-            document.getElementById("pirkimasOk").style.pointerEvents = "all";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-        }, 5000);
+            document.getElementById("prekes6").style.opacity = "1";
+            document.getElementById("addItem6").style.display = "block";
+            document.getElementById("addItem5").style.display = "none";
+        }, 500);
       }
-      function addItem8() {
-        document.getElementById("btn8").style.display = "none";
-        document.getElementById("loaderBtn8").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderBtn8").style.display = "block";
-        document.getElementById("pirkimasOk").style.opacity = "0";
-        document.getElementById("pirkimasOk").style.pointerEvents = "none";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
+      function itemAdd6() {
+        document.getElementById("addItem6").style.backgroundColor = "black";
+        document.getElementById("addItem6").style.color = "white";
         setTimeout(() => {
-            document.getElementById("loaderBtn8").style.opacity = "0";
-            document.getElementById("loaderBtn8").style.animation = "none";
-            document.getElementById("preke8").style.border = "none";
-            document.getElementById("inputBtn8").style.border = "none";
-            document.getElementById("inputeBtn8").style.border = "none";
-            document.getElementById("preke9").style.display = "flex";
-            document.getElementById("pirkimasOk").style.opacity = "1";
-            document.getElementById("pirkimasOk").style.pointerEvents = "all";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-        }, 5000);
+            document.getElementById("addItem6").style.backgroundColor = "white";
+            document.getElementById("addItem6").style.color = "black";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("prekes7").style.display = "flex";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("prekes7").style.opacity = "1";
+            document.getElementById("addItem7").style.display = "block";
+            document.getElementById("addItem6").style.display = "none";
+        }, 500);
       }
-      function addItem9() {
-        document.getElementById("btn9").style.display = "none";
-        document.getElementById("loaderBtn9").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderBtn9").style.display = "block";
-        document.getElementById("pirkimasOk").style.opacity = "0";
-        document.getElementById("pirkimasOk").style.pointerEvents = "none";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
+      function itemAdd7() {
+        document.getElementById("addItem7").style.backgroundColor = "black";
+        document.getElementById("addItem7").style.color = "white";
         setTimeout(() => {
-            document.getElementById("loaderBtn9").style.opacity = "0";
-            document.getElementById("loaderBtn9").style.animation = "none";
-            document.getElementById("preke9").style.border = "none";
-            document.getElementById("inputBtn9").style.border = "none";
-            document.getElementById("inputeBtn9").style.border = "none";
-            document.getElementById("preke10").style.display = "flex";
-            document.getElementById("pirkimasOk").style.opacity = "1";
-            document.getElementById("pirkimasOk").style.pointerEvents = "all";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-        }, 5000);
+            document.getElementById("addItem7").style.backgroundColor = "white";
+            document.getElementById("addItem7").style.color = "black";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("prekes8").style.display = "flex";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("prekes8").style.opacity = "1";
+            document.getElementById("addItem8").style.display = "block";
+            document.getElementById("addItem7").style.display = "none";
+        }, 500);
       }
-      function addItem10() {
-        document.getElementById("btn10").style.display = "none";
-        document.getElementById("loaderBtn10").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderBtn10").style.display = "block";
-        document.getElementById("pirkimasOk").style.opacity = "0";
-        document.getElementById("pirkimasOk").style.pointerEvents = "none";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
+      function itemAdd8() {
+        document.getElementById("addItem8").style.backgroundColor = "black";
+        document.getElementById("addItem8").style.color = "white";
         setTimeout(() => {
-            document.getElementById("loaderBtn10").style.opacity = "0";
-            document.getElementById("loaderBtn10").style.animation = "none";
-            document.getElementById("preke10").style.border = "none";
-            document.getElementById("inputBtn10").style.border = "none";
-            document.getElementById("inputeBtn10").style.border = "none";
-            document.getElementById("preke11").style.display = "flex";
-            document.getElementById("pirkimasOk").style.opacity = "1";
-            document.getElementById("pirkimasOk").style.pointerEvents = "all";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-        }, 5000);
+            document.getElementById("addItem8").style.backgroundColor = "white";
+            document.getElementById("addItem8").style.color = "black";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("prekes9").style.display = "flex";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("prekes9").style.opacity = "1";
+            document.getElementById("addItem9").style.display = "block";
+            document.getElementById("addItem8").style.display = "none";
+        }, 500);
       }
-      function addItem11() {
-        document.getElementById("btn11").style.display = "none";
-        document.getElementById("loaderBtn11").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderBtn11").style.display = "block";
-        document.getElementById("pirkimasOk").style.opacity = "0";
-        document.getElementById("pirkimasOk").style.pointerEvents = "none";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
+      function itemAdd9() {
+        document.getElementById("addItem9").style.backgroundColor = "black";
+        document.getElementById("addItem9").style.color = "white";
         setTimeout(() => {
-            document.getElementById("loaderBtn11").style.opacity = "0";
-            document.getElementById("loaderBtn11").style.animation = "none";
-            document.getElementById("preke11").style.border = "none";
-            document.getElementById("inputBtn11").style.border = "none";
-            document.getElementById("inputeBtn11").style.border = "none";
-            document.getElementById("preke12").style.display = "flex";
-            document.getElementById("pirkimasOk").style.opacity = "1";
-            document.getElementById("pirkimasOk").style.pointerEvents = "all";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-        }, 5000);
+            document.getElementById("addItem9").style.backgroundColor = "white";
+            document.getElementById("addItem9").style.color = "black";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("prekes10").style.display = "flex";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("prekes10").style.opacity = "1";
+            document.getElementById("addItem10").style.display = "block";
+            document.getElementById("addItem9").style.display = "none";
+        }, 500);
       }
-      function addItem12() {
-        document.getElementById("btn12").style.display = "none";
-        document.getElementById("loaderBtn12").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderBtn12").style.display = "block";
-        document.getElementById("pirkimasOk").style.opacity = "0";
-        document.getElementById("pirkimasOk").style.pointerEvents = "none";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
+      function itemAdd10() {
+        document.getElementById("addItem10").style.backgroundColor = "black";
+        document.getElementById("addItem10").style.color = "white";
         setTimeout(() => {
-            document.getElementById("loaderBtn12").style.opacity = "0";
-            document.getElementById("loaderBtn12").style.animation = "none";
-            document.getElementById("preke12").style.border = "none";
-            document.getElementById("inputBtn12").style.border = "none";
-            document.getElementById("inputeBtn12").style.border = "none";
-            document.getElementById("preke13").style.display = "flex";
-            document.getElementById("pirkimasOk").style.opacity = "1";
-            document.getElementById("pirkimasOk").style.pointerEvents = "all";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-        }, 5000);
+            document.getElementById("addItem10").style.backgroundColor = "white";
+            document.getElementById("addItem10").style.color = "black";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("prekes11").style.display = "flex";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("prekes11").style.opacity = "1";
+            document.getElementById("addItem11").style.display = "block";
+            document.getElementById("addItem10").style.display = "none";
+        }, 500);
       }
-      function addItem13() {
-        document.getElementById("btn13").style.display = "none";
-        document.getElementById("loaderBtn13").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderBtn13").style.display = "block";
-        document.getElementById("pirkimasOk").style.opacity = "0";
-        document.getElementById("pirkimasOk").style.pointerEvents = "none";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
+      function itemAdd11() {
+        document.getElementById("addItem11").style.backgroundColor = "black";
+        document.getElementById("addItem11").style.color = "white";
         setTimeout(() => {
-            document.getElementById("loaderBtn13").style.opacity = "0";
-            document.getElementById("loaderBtn13").style.animation = "none";
-            document.getElementById("preke13").style.border = "none";
-            document.getElementById("inputBtn13").style.border = "none";
-            document.getElementById("inputeBtn13").style.border = "none";
-            document.getElementById("preke14").style.display = "flex";
-            document.getElementById("pirkimasOk").style.opacity = "1";
-            document.getElementById("pirkimasOk").style.pointerEvents = "all";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-        }, 5000);
+            document.getElementById("addItem11").style.backgroundColor = "white";
+            document.getElementById("addItem11").style.color = "black";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("prekes12").style.display = "flex";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("prekes12").style.opacity = "1";
+            document.getElementById("addItem12").style.display = "block";
+            document.getElementById("addItem11").style.display = "none";
+        }, 500);
       }
-      function addItem14() {
-        document.getElementById("btn14").style.display = "none";
-        document.getElementById("loaderBtn14").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderBtn14").style.display = "block";
-        document.getElementById("pirkimasOk").style.opacity = "0";
-        document.getElementById("pirkimasOk").style.pointerEvents = "none";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
+      function itemAdd12() {
+        document.getElementById("addItem12").style.backgroundColor = "black";
+        document.getElementById("addItem12").style.color = "white";
         setTimeout(() => {
-            document.getElementById("loaderBtn14").style.opacity = "0";
-            document.getElementById("loaderBtn14").style.animation = "none";
-            document.getElementById("preke14").style.border = "none";
-            document.getElementById("inputBtn14").style.border = "none";
-            document.getElementById("inputeBtn14").style.border = "none";
-            document.getElementById("preke15").style.display = "flex";
-            document.getElementById("pirkimasOk").style.opacity = "1";
-            document.getElementById("pirkimasOk").style.pointerEvents = "all";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-        }, 5000);
+            document.getElementById("addItem12").style.backgroundColor = "white";
+            document.getElementById("addItem12").style.color = "black";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("prekes13").style.display = "flex";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("prekes13").style.opacity = "1";
+            document.getElementById("addItem13").style.display = "block";
+            document.getElementById("addItem12").style.display = "none";
+        }, 500);
       }
-      function addItem15() {
-        document.getElementById("btn15").style.display = "none";
-        document.getElementById("loaderBtn15").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderBtn15").style.display = "block";
-        document.getElementById("pirkimasOk").style.opacity = "0";
-        document.getElementById("pirkimasOk").style.pointerEvents = "none";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
+      function itemAdd13() {
+        document.getElementById("addItem13").style.backgroundColor = "black";
+        document.getElementById("addItem13").style.color = "white";
         setTimeout(() => {
-            document.getElementById("loaderBtn15").style.opacity = "0";
-            document.getElementById("loaderBtn15").style.animation = "none";
-            document.getElementById("preke15").style.border = "none";
-            document.getElementById("inputBtn15").style.border = "none";
-            document.getElementById("inputeBtn15").style.border = "none";
-            document.getElementById("pirkimasOk").style.opacity = "1";
-            document.getElementById("pirkimasOk").style.pointerEvents = "all";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-        }, 5000);
+            document.getElementById("addItem13").style.backgroundColor = "white";
+            document.getElementById("addItem13").style.color = "black";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("prekes14").style.display = "flex";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("prekes14").style.opacity = "1";
+            document.getElementById("addItem14").style.display = "block";
+            document.getElementById("addItem13").style.display = "none";
+        }, 500);
       }
-      function pabaigtiPirkima() {
-        document.getElementById("loaderPaymentOk").style.animation = "rotate 1s linear infinite";
-        document.getElementById("loaderPaymentOk").style.display = "block";
-        document.getElementById("pirkimasOk").style.display = "none";
-        document.getElementById("zmogus2").style.pointerEvents = "none";
+      function itemAdd14() {
+        document.getElementById("addItem14").style.backgroundColor = "black";
+        document.getElementById("addItem14").style.color = "white";
         setTimeout(() => {
-            document.getElementById("loaderPaymentOk").style.display = "none";
-            document.getElementById("loaderPaymentOk").style.animation = "none";
-            document.getElementById("zmogus2").style.pointerEvents = "all";
-            document.getElementById("pirkimoViskas").style.display = "flex";
-            document.getElementById("pirkimasTxt").value = Number(document.getElementById("inputeBtn1").value) + Number(document.getElementById("inputeBtn2").value) + Number(document.getElementById("inputeBtn3").value) + Number(document.getElementById("inputeBtn4").value) + Number(document.getElementById("inputeBtn5").value) + Number(document.getElementById("inputeBtn6").value) + Number(document.getElementById("inputeBtn7").value) + Number(document.getElementById("inputeBtn8").value) + Number(document.getElementById("inputeBtn9").value) + Number(document.getElementById("inputeBtn10").value) + Number(document.getElementById("inputeBtn11").value) + Number(document.getElementById("inputeBtn12").value) + Number(document.getElementById("inputeBtn13").value) + Number(document.getElementById("inputeBtn14").value) + Number(document.getElementById("inputeBtn15").value) + document.getElementById("euro").value;
+            document.getElementById("addItem14").style.backgroundColor = "white";
+            document.getElementById("addItem14").style.color = "black";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("prekes15").style.display = "flex";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("prekes15").style.opacity = "1";
+            document.getElementById("addItem14").style.opacity = "0";
+        }, 500);
+        setTimeout(() => {
+            document.getElementById("addItem14").style.display = "none";
+        }, 800);
+      }
+      function completePurchase() {
+        document.getElementById("purchaseOk").style.backgroundColor = "black";
+        document.getElementById("addItem1").style.opacity = "0";
+        document.getElementById("addItem2").style.opacity = "0";
+        document.getElementById("addItem3").style.opacity = "0";
+        document.getElementById("addItem4").style.opacity = "0";
+        document.getElementById("addItem5").style.opacity = "0";
+        document.getElementById("addItem6").style.opacity = "0";
+        document.getElementById("addItem7").style.opacity = "0";
+        document.getElementById("addItem8").style.opacity = "0";
+        document.getElementById("addItem9").style.opacity = "0";
+        document.getElementById("addItem10").style.opacity = "0";
+        document.getElementById("addItem11").style.opacity = "0";
+        document.getElementById("addItem12").style.opacity = "0";
+        document.getElementById("addItem13").style.opacity = "0";
+        document.getElementById("addItem14").style.opacity = "0";
+        document.getElementById("purchaseOk").style.color = "white";
+        document.getElementById("pirkimasTxt").value = Number(document.getElementById("inputeBtn1").value) + Number(document.getElementById("inputeBtn2").value) + Number(document.getElementById("inputeBtn3").value) + Number(document.getElementById("inputeBtn4").value) + Number(document.getElementById("inputeBtn5").value) + Number(document.getElementById("inputeBtn6").value) + Number(document.getElementById("inputeBtn7").value) + Number(document.getElementById("inputeBtn8").value) + Number(document.getElementById("inputeBtn9").value) + Number(document.getElementById("inputeBtn10").value) + Number(document.getElementById("inputeBtn11").value) + Number(document.getElementById("inputeBtn12").value) + Number(document.getElementById("inputeBtn13").value) + Number(document.getElementById("inputeBtn14").value) + Number(document.getElementById("inputeBtn15").value);
+        setTimeout(() => {
+            document.getElementById("purchaseOk").style.backgroundColor = "white";
+            document.getElementById("purchaseOk").style.color = "black";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("addItem2").style.display = "none";
+            document.getElementById("addItem3").style.display = "none";
+            document.getElementById("addItem4").style.display = "none";
+            document.getElementById("addItem5").style.display = "none";
+            document.getElementById("addItem6").style.display = "none";
+            document.getElementById("addItem7").style.display = "none";
+            document.getElementById("addItem8").style.display = "none";
+            document.getElementById("addItem9").style.display = "none";
+            document.getElementById("addItem10").style.display = "none";
+            document.getElementById("addItem11").style.display = "none";
+            document.getElementById("addItem12").style.display = "none";
+            document.getElementById("addItem13").style.display = "none";
+            document.getElementById("addItem14").style.display = "none";
+        }, 300);
+        setTimeout(() => {
+            document.getElementById("completion").style.left = "15px";
+            document.getElementById("addItem1").style.opacity = "0";
+        }, 500);
+        setTimeout(() => {
+            document.getElementById("loadAmountMoney").style.opacity = "0";
+        }, 3500);
+        setTimeout(() => {
+            document.getElementById("loadAmountMoney").style.display = "none";
+            document.getElementById("nowComp").style.opacity = "1";
+        }, 3800);
+      }
+      function completeAfter() {
+        document.getElementById("purchaseAfterBtn").style.backgroundColor = "black";
+        document.getElementById("purchaseAfterBtn").style.color = "white";
+        setTimeout(() => {
+            document.getElementById("purchaseAfterBtn").style.backgroundColor = "white";
+            document.getElementById("purchaseAfterBtn").style.color = "black";
+            document.getElementById("start").style.display = "flex";
+            document.getElementById("error2").style.display = "flex";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("completion").style.left = "-415px";
+            document.getElementById("start").style.opacity = "1";
+            document.getElementById("error2").style.opacity = "1";
+        }, 300);
+      }
+      function newPurchase() {
+        document.getElementById("selectLoadBtn").style.opacity = "0";
+        document.getElementById("selectLoadBtn").style.pointerEvents = "none";
+        document.getElementById("purchaseNew").style.opacity = "0";
+        document.getElementById("closeRegister").style.opacity = "0";
+        document.getElementById("voice").style.opacity = "0";
+        document.getElementById("disableClick").style.display = "block";
+        setTimeout(() => {
+            document.getElementById("closeRegister").style.height = "0";
+            document.getElementById("voice").style.height = "0";
+            document.getElementById("purchaseNew").style.height = "0";
+            document.getElementById("closeRegister").style.marginBottom = "0";
+            document.getElementById("pasirinktiVeikla").style.display = "none";
+            document.getElementById("startingPurchase").style.display = "block";
+        }, 300);
+        setTimeout(() => {
+            document.getElementById("startingPurchase").style.marginBottom = "0";
+        }, 350);
+        setTimeout(() => {
+            document.getElementById("purchase").style.display = "block";
+            document.getElementById("disableClick").style.display = "none";
         }, 5000);
         setTimeout(() => {
-            document.getElementById("btnForPay").style.opacity = "1";
-            document.getElementById("btnForPay").style.pointerEvents = "all";
-        }, 10000);
-      }
-      function paymentOkNow() {
-            document.getElementById("btnForPay").style.opacity = "0";
-            document.getElementById("btnForPay").style.pointerEvents = "none";
-            document.getElementById("pirkimoViskas").style.display = "none";
-            document.getElementById("newPaymentNow").style.display = "none";
-            document.getElementById("main").style.display = "flex";
-            setTimeout(() => {
-            document.getElementById("loading").style.display = "flex";
-            document.getElementById("error").style.display = "flex";
-            document.getElementById("power").style.display = "none";
-            }, 5000);
+            document.getElementById("purchase").style.opacity = "1";
+            document.getElementById("closeRegister").style.opacity = "1";
+            document.getElementById("closeRegister").style.height = "50px";
+            document.getElementById("voice").style.opacity = "1";
+            document.getElementById("voice").style.height = "50px";
+            document.getElementById("closeRegister").style.marginBottom = "20px";
+            document.getElementById("pasirinktiVeikla").style.display = "block";
+            document.getElementById("startingPurchase").style.display = "none";
+            document.getElementById("startingPurchase").style.marginBottom = "50px";
+        }, 5300);
       }
     </script>
 </body>
