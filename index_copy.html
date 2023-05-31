@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0.003</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@200;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body onload="loadFunction()">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            font-family: 'Mulish', sans-serif;
+            text-align: center;
+            transition: 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body{
+            background-color: #ececf9;
+        }
+        #loadScreen{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: black;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px dotted #FFF;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  animation: rotation 2s linear infinite;
+}
+.loader2 {
+  width: 48px;
+  height: 48px;
+  border: 5px dotted black;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  animation: rotation 2s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 
+#keypad{
+            width: 280px; 
+            height: 450px; 
+            border-radius: 25px; 
+            border: 2px none; 
+            background-color: transparent; 
+            color: black; 
+            font-size: 25px;
+            margin: 10px auto;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+            transition: 0.3s ease-out;
+        }
+        #keypad button{
+            width: 75px;
+            height: 75px;
+            border-radius: 50px;
+            border: none;
+            font-size: 30px;
+            background-color: #ececf9;
+            cursor: pointer;
+            transition: 0.15s;
+            color: black;
+        }
+        #keypad input{
+            display: none;
+        }
+        ::placeholder {
+            color: black;
+            opacity: 1;
+        }
+    </style>
+    <audio src="ding.mp3" id="ding"></audio>
+    <audio src="beep.mp3" id="beep"></audio>
+    <audio src="palaukite.m4a" id="palaukite"></audio>
+    <audio src="reikia_tap_pat.m4a" id="reikia_tap_pat"></audio>
+    <div id="loadScreen">
+        <i class="fa-brands fa-redhat" style="font-size: 150px; opacity: 0; position: absolute; margin-top: 0;" id="hat"></i>
+        <p style="margin-top: 20px; font-size: 25px; opacity: 0; position: absolute; margin-top: 120px;" id="redos">RedOS</p>
+        <div style="opacity: 0; position: absolute; margin-top: 120px; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; transform: scale(0.7);" id="load"><span class="loader"></span></div>
+        <div style="width: 100%; height: 100%; position: absolute; top: 0; right: 0; left: 0; bottom: 0; justify-content: center; align-items: center; opacity: 0; display: none;" id="user">
+            <p style="position: absolute; font-size: 25px; margin-top: -170px;" id="chooseUser"> Choose user:</p>
+            <div style="position: absolute; font-size: 25px; margin-top: -170px; display: none; justify-content: center; align-items: center; width: auto;" id="switchingUser"><div style="transform: scale(0.6);" id="load"><span class="loader"></span></div> <p style="margin-left: -3px; margin-top: -3px;">Switching user...</p></div>
+            <div style="width: 150px; height: 150px; padding: 8px; margin-top: 100px; position: absolute; margin-left: -150px; cursor: pointer; z-index: 1; background-color: black; color: white;" id="user1" onclick="userPardavejas()"><i class="fa-regular fa-circle-user" style="font-size: 100px; transition: 0.01s;"></i> <p style="font-size: 20px; margin-top: 10px; transition: 0.01s;">Pardavėjas</p></div>
+            <div style="width: 150px; height: 150px; padding: 8px; margin-top: 100px; position: absolute; margin-left: 150px; cursor: pointer; z-index: 1; background-color: black;" id="user2"><i class="fa-solid fa-plus-circle" style="font-size: 100px; transition: 0.01s;"></i> <p style="font-size: 20px; margin-top: 10px; transition: 0.01s;">Add user</p></div>
+        </div>
+    </div>
+    <i class="fa-solid fa-volume-high" style="position: fixed; top: 20px; left: 20px; font-size: 30px; color: #39ac39; cursor: pointer; display: none; opacity: 0;" id="soundOn"></i>
+    <div style="position: fixed; width: 60%; height: 80%; border: 3px solid black; border-radius: 25px; top: 10%; left: 20%; background-color: white; opacity: 0; display: none;" id="main">
+        <p style="position: absolute; font-size: 20px; right: 95px; bottom: 37px;" id="kraunasiP">Kraunasi</p>
+        <div style="position: absolute; right: 0; bottom: 0; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; transform: scale(1);" id="loadMain"><span class="loader2"></span></div>
+        <div style="width: 50%; height: 100%; position: absolute; left: 0; top: 0; display: none; justify-content: center; opacity: 0; align-items: center; flex-direction: column;" id="naudotojasLogin">
+            <div style="width: 150px; height: 150px; padding: 8px; color: black;"><i class="fa-regular fa-circle-user" style="font-size: 100px;"></i> <p style="font-size: 20px; margin-top: 10px;">Pardavėjas</p></div>
+            <p id="tekstas" style="width: 130px; height: 30px; background-color: #ececf9; border: none; border-radius: 50px; font-size: 20px; letter-spacing: 3px; overflow: hidden; padding: 10px; padding-top: 3px;"></p>
+        </div>
+        <div style="width: 50%; height: 100%; position: absolute; right: 0; top: 0; display: none; opacity: 0; justify-content: center; align-items: center;" id="keypadoDivas">
+        <form>
+            <div id="keypad">
+                <form style="width: 100%; height: 100%; display: flex; justify-content: space-around; align-items: center; flex-direction: column;">
+                    <input type="text" name="pin" id="inputas">
+                    <p style="font-size: 20px; margin-bottom: 30px;">Įveskite tapatybės kodą:</p>
+                    <div style="width: 100%; display: flex; justify-content: space-around; align-items: center;">
+                        <button type="button" onclick="pirmas()" id="vienasY">1<i class="fa-solid fa-voicemail" style="font-size: 12px; margin-bottom: 5px; display: block; transition: 0.01s; opacity: 0;"></i></button>
+                        <button type="button" onclick="antras()" id="duY">2<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">A B C</p></button>
+                        <button type="button" onclick="trecias()" id="trysY">3<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">D E F</p></button>
+                    </div>
+                    <div style="width: 100%; display: flex; justify-content: space-around; align-items: center;">
+                        <button type="button" onclick="ketvirtas()" id="keturiY">4<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">G H I</p></button>
+                        <button type="button" onclick="penktas()" id="penkiY">5<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">J K L</p></button>
+                        <button type="button" onclick="sestas()" id="sesiY">6<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">M N O</p></button>
+                    </div>
+                    <div style="width: 100%; display: flex; justify-content: space-around; align-items: center;">
+                        <button type="button" onclick="septintas()" id="septyniY">7<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">P Q R S</p></button>
+                        <button type="button" onclick="astuntas()" id="astuoniY">8<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">T U V</p></button>
+                        <button type="button" onclick="devintas()" id="devyniY">9<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">W X Y Z</p></button>
+                    </div>
+                    <div style="width: 100%; display: flex; justify-content: space-around; align-items: center;">
+                        <button type="button" onclick="check(this.form)" id="checkBtn" style="border: none; font-size: 18px; background-color: transparent;">OK</button>
+                        <button type="button" onclick="nulinis()" id="nulisY">0<i class="fa-solid fa-plus" style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;"></i></button>
+                        <button type="button" onclick="istrinti()"  id="istrinimas" style="border: none; font-size: 18px; background-color: transparent;">Delete</button>
+                    </div>
+                </form>
+            </div>
+            <input type="number" value="1" id="vienetas" style="display: none;">
+            <input type="number" value="2" id="dvejetas" style="display: none;">
+            <input type="number" value="3" id="trejetas" style="display: none;">
+            <input type="number" value="4" id="ketvertas" style="display: none;">
+            <input type="number" value="5" id="penketas" style="display: none;">
+            <input type="number" value="6" id="sesetas" style="display: none;">
+            <input type="number" value="7" id="septynetas" style="display: none;">
+            <input type="number" value="8" id="astuonetas" style="display: none;">
+            <input type="number" value="9" id="devynetas" style="display: none;">
+            <input type="number" value="0" id="nulis" style="display: none;">
+        </form>
+        </div>
+    </div>
+
+
+    <script src="https://kit.fontawesome.com/a11707644f.js" crossorigin="anonymous"></script>
+    <script>
+        var tekstas = document.getElementById("tekstas");
+  
+        // function gfg_Run() {
+            
+        // }
+        function pirmas() {
+            document.getElementById("beep").play();
+            document.getElementById('beep').currentTime = 0;
+            document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("vienetas").value;
+            document.getElementById("vienasY").style.backgroundColor = "white";
+            setTimeout(() => {
+                tekstas.innerHTML =
+                document.getElementById("inputas").value;
+            }, 10);
+            setTimeout(() => {
+                document.getElementById("vienasY").style.backgroundColor = "#ececf9";
+            }, 150);
+        }
+        function antras() {
+            document.getElementById("beep").play();
+            document.getElementById('beep').currentTime = 0;
+            document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("dvejetas").value;
+            document.getElementById("duY").style.backgroundColor = "white";
+            setTimeout(() => {
+                tekstas.innerHTML =
+                document.getElementById("inputas").value;
+            }, 10);
+            setTimeout(() => {
+                document.getElementById("duY").style.backgroundColor = "#ececf9";
+            }, 150);
+        }
+        function trecias() {
+            document.getElementById("beep").play();
+            document.getElementById('beep').currentTime = 0;
+            document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("trejetas").value;
+            document.getElementById("trysY").style.backgroundColor = "white";
+            setTimeout(() => {
+                tekstas.innerHTML =
+                document.getElementById("inputas").value;
+            }, 10);
+            setTimeout(() => {
+                document.getElementById("trysY").style.backgroundColor = "#ececf9";
+            }, 150);
+        }
+        function ketvirtas() {
+            document.getElementById("beep").play();
+            document.getElementById('beep').currentTime = 0;
+            document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("ketvertas").value;
+            document.getElementById("keturiY").style.backgroundColor = "white";
+            setTimeout(() => {
+                tekstas.innerHTML =
+                document.getElementById("inputas").value;
+            }, 10);
+            setTimeout(() => {
+                document.getElementById("keturiY").style.backgroundColor = "#ececf9";
+            }, 150);
+        }
+        function penktas() {
+            document.getElementById("beep").play();
+            document.getElementById('beep').currentTime = 0;
+            document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("penketas").value;
+            document.getElementById("penkiY").style.backgroundColor = "white";
+            setTimeout(() => {
+                tekstas.innerHTML =
+                document.getElementById("inputas").value;
+            }, 10);
+            setTimeout(() => {
+                document.getElementById("penkiY").style.backgroundColor = "#ececf9";
+            }, 150);
+        }
+        function sestas() {
+            document.getElementById("beep").play();
+            document.getElementById('beep').currentTime = 0;
+            document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("sesetas").value;
+            document.getElementById("sesiY").style.backgroundColor = "white";
+            setTimeout(() => {
+                tekstas.innerHTML =
+                document.getElementById("inputas").value;
+            }, 10);
+            setTimeout(() => {
+                document.getElementById("sesiY").style.backgroundColor = "#ececf9";
+            }, 150);
+        }
+        function septintas() {
+            document.getElementById("beep").play();
+            document.getElementById('beep').currentTime = 0;
+            document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("septynetas").value;
+            document.getElementById("septyniY").style.backgroundColor = "white";
+            setTimeout(() => {
+                tekstas.innerHTML =
+                document.getElementById("inputas").value;
+            }, 10);
+            setTimeout(() => {
+                document.getElementById("septyniY").style.backgroundColor = "#ececf9";
+            }, 150);
+        }
+        function astuntas() {
+            document.getElementById("beep").play();
+            document.getElementById('beep').currentTime = 0;
+            document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("astuonetas").value;
+            document.getElementById("astuoniY").style.backgroundColor = "white";
+            setTimeout(() => {
+                tekstas.innerHTML =
+                document.getElementById("inputas").value;
+            }, 10);
+            setTimeout(() => {
+                document.getElementById("astuoniY").style.backgroundColor = "#ececf9";
+            }, 150);
+        }
+        function devintas() {
+            document.getElementById("beep").play();
+            document.getElementById('beep').currentTime = 0;
+            document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("devynetas").value;
+            document.getElementById("devyniY").style.backgroundColor = "white";
+            setTimeout(() => {
+                tekstas.innerHTML =
+                document.getElementById("inputas").value;
+            }, 10);
+            setTimeout(() => {
+                document.getElementById("devyniY").style.backgroundColor = "#ececf9";
+            }, 150);
+        }
+        function nulinis() {
+            document.getElementById("beep").play();
+            document.getElementById('beep').currentTime = 0;
+            document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("nulis").value;
+            document.getElementById("nulisY").style.backgroundColor = "white";
+            setTimeout(() => {
+                tekstas.innerHTML =
+                document.getElementById("inputas").value;
+            }, 10);
+            setTimeout(() => {
+                document.getElementById("nulisY").style.backgroundColor = "#ececf9";
+            }, 150);
+        }
+        function istrinti() {
+            document.getElementById("beep").play();
+            document.getElementById('beep').currentTime = 0;
+            document.getElementById("inputas").value = '';
+            document.getElementById("istrinimas").style.opacity = "0.5";
+            setTimeout(() => {
+                tekstas.innerHTML =
+                document.getElementById("inputas").value;
+            }, 10);
+            setTimeout(() => {
+                document.getElementById("istrinimas").style.opacity = "1";
+            }, 150);
+        }
+        function loadFunction() {
+        setTimeout(() => {
+            document.getElementById("hat").style.opacity = "1";
+        }, 1000);
+        setTimeout(() => {
+            document.getElementById("hat").style.marginTop = "-60px";
+            document.getElementById("hat").style.fontSize = "130px";
+        }, 6000);
+        setTimeout(() => {
+            document.getElementById("redos").style.opacity = "1";
+        }, 6300);
+        setTimeout(() => {
+            document.getElementById("redos").style.opacity = "0";
+        }, 9000);
+        setTimeout(() => {
+            document.getElementById("load").style.opacity = "1";
+        }, 9300);
+        setTimeout(() => {
+            document.getElementById("load").style.opacity = "0";
+        }, 15000);
+        setTimeout(() => {
+            document.getElementById("hat").style.fontSize = "150px";
+            document.getElementById("hat").style.marginTop = "0";
+            document.getElementById("load").style.opacity = "0";
+        }, 15300);
+        setTimeout(() => {
+            document.getElementById("hat").style.opacity = "0";
+            document.getElementById("user").style.display = "flex";
+        }, 16000);
+        setTimeout(() => {
+            document.getElementById("user").style.opacity = "1";
+            document.getElementById("hat").style.display = "none";
+            document.getElementById("redos").style.display = "none";
+            document.getElementById("load").style.display = "none";
+        }, 16300);
+      }
+      function userPardavejas() {
+        document.getElementById("user1").style.zIndex = "2";
+        document.getElementById("user1").style.pointerEvents = "none";
+        document.getElementById("user2").style.zIndex = "1";
+        document.getElementById("user2").style.pointerEvents = "none";
+        setTimeout(() => {
+            document.getElementById("user1").style.marginLeft = "0";
+            document.getElementById("user2").style.marginLeft = "0";
+            document.getElementById("chooseUser").style.display = "none";
+            document.getElementById("switchingUser").style.display = "flex";
+        }, 50);
+        setTimeout(() => {
+            document.getElementById("chooseUser").style.display = "block";
+            document.getElementById("switchingUser").style.display = "none";
+            document.getElementById("user").style.opacity = "0";
+        }, 5050);
+        setTimeout(() => {
+            document.getElementById("user").style.display = "none";
+            document.getElementById("loadScreen").style.opacity = "0";
+            document.getElementById("soundOn").style.display = "block";
+        }, 5350);
+        setTimeout(() => {
+            document.getElementById("loadScreen").style.display = "none";
+            document.getElementById("soundOn").style.opacity = "1";
+            document.getElementById("ding").play();
+        }, 5650);
+        setTimeout(() => {
+            document.getElementById("main").style.display = "block";
+        }, 5700);
+        setTimeout(() => {
+            document.getElementById("main").style.opacity = "1";
+        }, 6000);
+        setTimeout(() => {
+            document.getElementById("kraunasiP").style.opacity = "0";
+            document.getElementById("loadMain").style.opacity = "0";
+            document.getElementById("keypadoDivas").style.display = "flex";
+            document.getElementById("naudotojasLogin").style.display = "flex";
+        }, 11000);
+        setTimeout(() => {
+            document.getElementById("kraunasiP").style.display = "none";
+            document.getElementById("loadMain").style.display = "none";
+            document.getElementById("keypadoDivas").style.opacity = "1";
+            document.getElementById("naudotojasLogin").style.opacity = "1";
+            document.getElementById("reikia_tap_pat").play();
+        }, 11300);
+      }
+      var audioDing = document.getElementById("ding");
+        ding.onended = function() {
+            document.getElementById("palaukite").play();
+        };
+    </script>
+</body>
+</html>
