@@ -7,9 +7,9 @@
     <title>0.003</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@200;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@200;400;600;800&family=Source+Code+Pro:wght@200;400;600&display=swap" rel="stylesheet">
 </head>
-<body onload="loadFunction()">
+<body >
     <style>
         *{
             margin: 0;
@@ -38,6 +38,7 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            z-index: 5;
         }
 .loader {
   width: 48px;
@@ -66,6 +67,14 @@
   }
   100% {
     transform: rotate(360deg);
+  }
+} 
+@keyframes rotation2 {
+  0% {
+    transform: rotate(0deg) scale(2.0);
+  }
+  100% {
+    transform: rotate(360deg) scale(2.0);
   }
 } 
 #keypad{
@@ -102,12 +111,58 @@
             color: black;
             opacity: 1;
         }
+        #keypad2{
+            width: 280px; 
+            height: 450px; 
+            border-radius: 25px; 
+            border: 2px none; 
+            background-color: transparent; 
+            color: black; 
+            font-size: 25px;
+            margin: 10px auto;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+            transition: 0.3s ease-out;
+        }
+        #keypad2 button{
+            width: 75px;
+            height: 75px;
+            border-radius: 50px;
+            border: none;
+            font-size: 30px;
+            background-color: #ececf9;
+            cursor: default;
+            transition: 0.15s;
+            color: black;
+        }
+        #keypad2 input{
+            display: none;
+        }
     </style>
     <audio src="ding.mp3" id="ding"></audio>
     <audio src="beep.mp3" id="beep"></audio>
-    <audio src="palaukite.m4a" id="palaukite"></audio>
+    <audio src="denied.mp3" id="denied"></audio>
+    <!-- <audio src="palaukite.m4a" id="palaukite"></audio>
     <audio src="reikia_tap_pat.m4a" id="reikia_tap_pat"></audio>
+    <audio src="gerai.mp3" id="gerai"></audio>
+    <audio src="tapatybe_patvirtinta.m4a" id="tapatybe_patvirtinta"></audio> -->
+
+    <div style="width: 100%; height: 100%; position: fixed; background-color: black; z-index: 15; color: white; text-align: left; padding: 20px; display: none;" id="forceQuitScreen">
+        <div style="width: 100%; height: 100%; position: absolute; display: flex; justify-content: center; align-items: center; top: 0; left: 0;" id="loadQuit"><i class="fa-solid fa-triangle-exclamation" style="color: orange; position: absolute; font-size: 50px; margin-top: -5px;"></i><div style="width: 100px; height: 100px; border: 5px solid orange; border-radius: 100%; border-left-color: black; border-right-color: black; animation: rotation 1s linear infinite;"></div></div>
+        <p style="font-family: 'Source Code Pro', monospace; text-align: left; color: yellow; display: none;" id="quitTextYellow">RedOS</p>
+        <p style="font-family: 'Source Code Pro', monospace; text-align: left; color: yellow; display: none;" id="quitTextYellow2">system prompt 'force-quit'</p>
+        <p style="font-family: 'Source Code Pro', monospace; text-align: left; display: none;" id="quitText1">Closing 'api.created-by-matas.parduotuves.user=pardavejas.pass=OK'...</p>
+        <p style="font-family: 'Source Code Pro', monospace; text-align: left; display: none;" id="quitText2">Software closed.</p>
+        <p style="font-family: 'Source Code Pro', monospace; text-align: left; display: none;" id="quitText3">Stopping system...</p>
+        <p style="font-family: 'Source Code Pro', monospace; text-align: left; display: none;" id="quitText4">System stopped.</p>
+        <p style="font-family: 'Source Code Pro', monospace; text-align: left; display: none;" id="quitText5">Shutting down...</p>
+    </div>
+
     <div id="loadScreen">
+        <i class="fa-solid fa-power-off" style="color: white; position: fixed; right: 15px; top: 15px; font-size: 50px; opacity: 0; cursor: pointer;" id="powerOn" onclick="loadFunction()"></i>
         <i class="fa-brands fa-redhat" style="font-size: 150px; opacity: 0; position: absolute; margin-top: 0;" id="hat"></i>
         <p style="margin-top: 20px; font-size: 25px; opacity: 0; position: absolute; margin-top: 120px;" id="redos">RedOS</p>
         <div style="opacity: 0; position: absolute; margin-top: 120px; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; transform: scale(0.7);" id="load"><span class="loader"></span></div>
@@ -118,20 +173,26 @@
             <div style="width: 150px; height: 150px; padding: 8px; margin-top: 100px; position: absolute; margin-left: 150px; cursor: pointer; z-index: 1; background-color: black;" id="user2"><i class="fa-solid fa-plus-circle" style="font-size: 100px; transition: 0.01s;"></i> <p style="font-size: 20px; margin-top: 10px; transition: 0.01s;">Add user</p></div>
         </div>
     </div>
-    <i class="fa-solid fa-volume-high" style="position: fixed; top: 20px; left: 20px; font-size: 30px; color: #39ac39; cursor: pointer; display: none; opacity: 0;" id="soundOn"></i>
-    <div style="position: fixed; width: 60%; height: 80%; border: 3px solid black; border-radius: 25px; top: 10%; left: 20%; background-color: white; opacity: 0; display: none;" id="main">
+    <div style="width: 100%; height: 100%; position: fixed; background-color: black; z-index: 15; display: none; opacity: 0; justify-content: center; align-items: center;" id="offScreen">
+        <i class="fa-brands fa-redhat" style="font-size: 130px; position: absolute; margin-top: -60px; color: white;" id="hat2"></i>
+        <p style="margin-top: 20px; font-size: 25px; opacity: 0; position: absolute; margin-top: 120px; color: white;" id="redos2">RedOS</p>
+        <div style="position: absolute; margin-top: 120px; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; transform: scale(0.7);" id="offLoad"><span class="loader"></span></div>
+    </div>
+    <div style="position: fixed; width: 60%; height: 80%; box-shadow: 0 0 15px lightgrey; border-radius: 25px; top: 10%; left: 20%; background-color: white; opacity: 1; display: flex;" id="main">
+        <div style="position: fixed; width: 60%; height: 80%; border-radius: 25px; top: 10%; left: 20%; background-color: white; opacity: 0; z-index: 14; display: none;" id="mainOff"></div>
+
         <p style="position: absolute; font-size: 20px; right: 95px; bottom: 37px;" id="kraunasiP">Kraunasi</p>
         <div style="position: absolute; right: 0; bottom: 0; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; transform: scale(1);" id="loadMain"><span class="loader2"></span></div>
         <div style="width: 50%; height: 100%; position: absolute; left: 0; top: 0; display: none; justify-content: center; opacity: 0; align-items: center; flex-direction: column;" id="naudotojasLogin">
             <div style="width: 150px; height: 150px; padding: 8px; color: black;"><i class="fa-regular fa-circle-user" style="font-size: 100px;"></i> <p style="font-size: 20px; margin-top: 10px;">Pardavėjas</p></div>
-            <p id="tekstas" style="width: 130px; height: 30px; background-color: #ececf9; border: none; border-radius: 50px; font-size: 20px; letter-spacing: 3px; overflow: hidden; padding: 10px; padding-top: 3px;"></p>
+            <p id="tekstas" style="width: 130px; height: 30px; background-color: #ececf9; border: none; border-radius: 50px; font-size: 20px; letter-spacing: 3px; overflow: hidden; padding: 10px; padding-top: 3px; transition: 0.15s;"></p>
         </div>
         <div style="width: 50%; height: 100%; position: absolute; right: 0; top: 0; display: none; opacity: 0; justify-content: center; align-items: center;" id="keypadoDivas">
         <form>
             <div id="keypad">
                 <form style="width: 100%; height: 100%; display: flex; justify-content: space-around; align-items: center; flex-direction: column;">
                     <input type="text" name="pin" id="inputas">
-                    <p style="font-size: 20px; margin-bottom: 30px;">Įveskite tapatybės kodą:</p>
+                    <p style="font-size: 20px; margin-bottom: 30px;">Enter Passcode</p>
                     <div style="width: 100%; display: flex; justify-content: space-around; align-items: center;">
                         <button type="button" onclick="pirmas()" id="vienasY">1<i class="fa-solid fa-voicemail" style="font-size: 12px; margin-bottom: 5px; display: block; transition: 0.01s; opacity: 0;"></i></button>
                         <button type="button" onclick="antras()" id="duY">2<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">A B C</p></button>
@@ -166,12 +227,74 @@
             <input type="number" value="0" id="nulis" style="display: none;">
         </form>
         </div>
+
+        <div style="width: 150px; height: 95px; position: absolute; right: 10px; top: 10px; border-radius: 25px; background-color: white; z-index: 3; display: block; opacity: 1;">
+            <div style="width: 150px; justify-content: center; align-items: center; display: flex; opacity: 1; height: 0; overflow: hidden;" id="userShow">
+                <p>Pardavėjas</p>
+                <i class="fa-regular fa-circle-user" style="font-size: 30px; margin-left: 15px;"></i>
+            </div>
+            <button style="width: 140px; height: 40px; font-size: 15px; border-radius: 25px; border: none; background-color: #ececf9; cursor: pointer; margin-bottom: 15px;" id="off" onclick="turnOff()"><i class="fa-solid fa-power-off"></i> Išjungti</button>
+        </div>
+        <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; right: 0; background-color: black; z-index: 5; border-radius: 25px; opacity: 0; display: none;" id="offBlack"></div>
+        <div style="width: 100%; height: 100%; position: absolute; display: none; opacity: 0; justify-content: center; align-items: center; top: 0; left: 0; right: 0; z-index: 6; border-radius: 25px;" id="offBack"><div style="width: 370px; height: 235px; background-color: white; border-radius: 25px; font-size: 20px; padding: 15px; padding-top: 20px;"><i class="fa-solid fa-power-off"></i> Išjungti sistemą? <p style="font-size: 13px; margin-top: 15px;">Visi pradėti veiksmai nebus išsaugoti</p><button style="width: 250px; height: 50px; font-size: 20px; border-radius: 25px; border: none; background-color: #ececf9; cursor: pointer; margin-bottom: 15px; margin-top: 20px;" id="confirmOff" onclick="offConfirm()">Išjungti</button><button style="width: 250px; height: 50px; font-size: 20px; border-radius: 25px; border: none; background-color: #ececf9; cursor: pointer; margin-bottom: 15px;" id="cancelOff" onclick="offCancel()">Atšaukti</button></div></div>
+
+        <div style="display: none; justify-content: center; align-items: center; flex-direction: column; width: 100%; height: 100%; opacity: 0;" id="registerClosed">
+            <p style="font-size: 30px; margin-bottom: 15px;"><i class="fa-solid fa-store-slash"></i> Kasa uždaryta</p>
+            <button style="margin-top: 15px; width: 120px; height: 50px; font-size: 20px; border-radius: 25px; border: none; background-color: #ececf9; cursor: pointer;" id="openRegister" onclick="atidaryti()">Atidaryti</button>
+        </div>
+        <div style="display: none; justify-content: center; align-items: center; flex-direction: column; width: 100%; height: 100%; opacity: 0;" id="cardReaderInfo">
+            <p style="font-size: 25px; margin-bottom: 15px;"><i class="fa-solid fa-circle-exclamation"></i> Neprijungtas išorinis banko kortelių skaitytuvas</p>
+            <p style="font-size: 17px; margin-bottom: 15px;">Jis reikalingas mokėjimams atlikti</p>
+            <button style="margin-top: 15px; width: 150px; height: 50px; font-size: 20px; border-radius: 25px; border: none; background-color: #ececf9; cursor: pointer; pointer-events: none; opacity: 0.5;" id="okRead" onclick="okReader()">Vis tiek tęsti</button>
+        </div>
+
+        <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; right: 0; background-color: black; z-index: 5; border-radius: 25px; opacity: 0; display: none;" id="quitBlack"></div>
+        <div style="width: 100%; height: 100%; position: absolute; display: none; opacity: 0; justify-content: center; align-items: center; top: 0; left: 0; right: 0; z-index: 6; border-radius: 25px;" id="quitBack"><div style="width: 370px; height: 235px; background-color: white; border-radius: 25px; font-size: 20px; padding: 15px; padding-top: 20px;"><i class="fa-regular fa-rectangle-xmark"></i> Priverstinai sustabdyti sistemą? <p style="font-size: 13px; margin-top: 15px;">Visi pradėti veiksmai nebus išsaugoti ir sistema išsijungs</p><button style="width: 250px; height: 50px; font-size: 20px; border-radius: 25px; border: none; background-color: #ececf9; cursor: pointer; margin-bottom: 15px; margin-top: 20px;" id="confirmQuit" onclick="quitConfirm()">Sustabdyti</button><button style="width: 250px; height: 50px; font-size: 20px; border-radius: 25px; border: none; background-color: #ececf9; cursor: pointer; margin-bottom: 15px;" id="cancelQuit" onclick="quitCancel()">Atšaukti</button></div></div>
+        <div style="display: none; position: absolute; left: 0; top: 0; justify-content: center; align-items: center; flex-direction: column; width: 50%; height: 100%; opacity: 0;" id="options">
+            <button style="width: 250px; height: 50px; font-size: 20px; border-radius: 25px; border: none; background-color: #ececf9; cursor: pointer; margin-bottom: 15px;"><i class="fa-solid fa-cart-plus"></i> Naujas pirkimas</button>
+            <button style="width: 250px; height: 50px; font-size: 20px; border-radius: 25px; border: none; background-color: #ececf9; cursor: pointer; margin-bottom: 15px;"><i class="fa-solid fa-pencil"></i> Redaguoti prekes</button>
+            <button style="width: 250px; height: 50px; font-size: 20px; border-radius: 25px; border: none; background-color: #ececf9; cursor: pointer; margin-bottom: 15px;" id="closeRegister" onclick="registerClose()"><i class="fa-solid fa-store-slash"></i> Uždaryti kasą</button>
+            <button style="width: 200px; height: 30px; font-size: 13px; border-radius: 25px; border: none; background-color: #ececf9; cursor: pointer; margin-bottom: 15px;" id="quit" onclick="forceQuit()"><i class="fa-regular fa-rectangle-xmark"></i> Priverstinai sustabdyti</button>
+        </div>
+        <div style="width: 50%; height: 100%; position: absolute; right: 0; top: 0; display: none; opacity: 0; justify-content: center; align-items: center;" id="keypado2Divas">
+        <form>
+            <div id="keypad2">
+                <form style="width: 100%; height: 100%; display: flex; justify-content: space-around; align-items: center; flex-direction: column;">
+                    <input type="text" name="pin" id="inputas">
+                    <p style="font-size: 20px; margin-bottom: 15px;"></p>
+                    <div style="width: 100%; display: flex; justify-content: space-around; align-items: center;">
+                        <button type="button">1<i class="fa-solid fa-voicemail" style="font-size: 12px; margin-bottom: 5px; display: block; transition: 0.01s; opacity: 0;"></i></button>
+                        <button type="button">2<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">A B C</p></button>
+                        <button type="button">3<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">D E F</p></button>
+                    </div>
+                    <div style="width: 100%; display: flex; justify-content: space-around; align-items: center;">
+                        <button type="button">4<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">G H I</p></button>
+                        <button type="button">5<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">J K L</p></button>
+                        <button type="button">6<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">M N O</p></button>
+                    </div>
+                    <div style="width: 100%; display: flex; justify-content: space-around; align-items: center;">
+                        <button type="button">7<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">P Q R S</p></button>
+                        <button type="button">8<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">T U V</p></button>
+                        <button type="button">9<p style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;">W X Y Z</p></button>
+                    </div>
+                    <div style="width: 100%; display: flex; justify-content: space-around; align-items: center;">
+                        <button type="button" style="border: none; font-size: 18px; background-color: transparent;">OK</button>
+                        <button type="button">0<i class="fa-solid fa-plus" style="font-size: 10px; margin-bottom: 5px; display: block; transition: 0.01s;"></i></button>
+                        <button type="button" style="border: none; font-size: 18px; background-color: transparent;">Delete</button>
+                    </div>
+                    <p style="font-size: 20px; margin-top: 15px;"></p>
+                </form>
+            </div>
     </div>
 
 
     <script src="https://kit.fontawesome.com/a11707644f.js" crossorigin="anonymous"></script>
     <script>
         var tekstas = document.getElementById("tekstas");
+        setTimeout(() => {
+            document.getElementById("powerOn").style.opacity = "1";
+            document.getElementById("powerOn").style.pointerEvents = "all";
+        }, 1000);
   
         // function gfg_Run() {
             
@@ -319,7 +442,243 @@
                 document.getElementById("istrinimas").style.opacity = "1";
             }, 150);
         }
+        function check(form)
+        {
+                if(form.pin.value == "000000")
+                {
+                    document.getElementById("beep").play();
+                document.getElementById('beep').currentTime = 0;
+                document.getElementById("tekstas").style.opacity = "0.5";
+                document.getElementById("checkBtn").style.opacity = "0.5";
+                document.getElementById("vienasY").style.pointerEvents = "none";
+                document.getElementById("duY").style.pointerEvents = "none";
+                document.getElementById("trysY").style.pointerEvents = "none";
+                document.getElementById("keturiY").style.pointerEvents = "none";
+                document.getElementById("penkiY").style.pointerEvents = "none";
+                document.getElementById("sesiY").style.pointerEvents = "none";
+                document.getElementById("septyniY").style.pointerEvents = "none";
+                document.getElementById("astuoniY").style.pointerEvents = "none";
+                document.getElementById("devyniY").style.pointerEvents = "none";
+                document.getElementById("istrinimas").style.pointerEvents = "none";
+                document.getElementById("nulisY").style.pointerEvents = "none";
+                document.getElementById("checkBtn").style.pointerEvents = "none";
+                setTimeout(() => {
+                    document.getElementById("vienasY").style.opacity = "0.5";
+                    document.getElementById("duY").style.opacity = "0.5";
+                    document.getElementById("trysY").style.opacity = "0.5";
+                    document.getElementById("keturiY").style.opacity = "0.5";
+                    document.getElementById("penkiY").style.opacity = "0.5";
+                    document.getElementById("sesiY").style.opacity = "0.5";
+                    document.getElementById("septyniY").style.opacity = "0.5";
+                    document.getElementById("astuoniY").style.opacity = "0.5";
+                    document.getElementById("devyniY").style.opacity = "0.5";
+                    document.getElementById("istrinimas").style.opacity = "0.5";
+                    document.getElementById("nulisY").style.opacity = "0.5";
+                    document.getElementById("checkBtn").style.opacity = "0.5";
+                }, 150);
+                setTimeout(() => {
+                    document.getElementById("vienasY").style.opacity = "1";
+                    document.getElementById("duY").style.opacity = "1";
+                    document.getElementById("trysY").style.opacity = "1";
+                    document.getElementById("keturiY").style.opacity = "1";
+                    document.getElementById("penkiY").style.opacity = "1";
+                    document.getElementById("sesiY").style.opacity = "1";
+                    document.getElementById("septyniY").style.opacity = "1";
+                    document.getElementById("astuoniY").style.opacity = "1";
+                    document.getElementById("devyniY").style.opacity = "1";
+                    document.getElementById("tekstas").style.opacity = "1";
+                    document.getElementById("istrinimas").style.opacity = "1";
+                    document.getElementById("nulisY").style.opacity = "1";
+                    document.getElementById("checkBtn").style.opacity = "1";
+                    document.getElementById("vienasY").style.pointerEvents = "all";
+                    document.getElementById("duY").style.pointerEvents = "all";
+                    document.getElementById("trysY").style.pointerEvents = "all";
+                    document.getElementById("keturiY").style.pointerEvents = "all";
+                    document.getElementById("penkiY").style.pointerEvents = "all";
+                    document.getElementById("sesiY").style.pointerEvents = "all";
+                    document.getElementById("septyniY").style.pointerEvents = "all";
+                    document.getElementById("astuoniY").style.pointerEvents = "all";
+                    document.getElementById("devyniY").style.pointerEvents = "all";
+                    document.getElementById("istrinimas").style.pointerEvents = "all";
+                    document.getElementById("nulisY").style.pointerEvents = "all";
+                    document.getElementById("checkBtn").style.pointerEvents = "all";
+                    document.getElementById("userShow").style.height = "50px";
+                }, 3900);
+                setTimeout(() => {
+                    document.getElementById("userShow").style.opacity = "1";
+                    document.getElementById("keypadoDivas").style.opacity = "0";
+                    document.getElementById("naudotojasLogin").style.opacity = "0";
+                    document.getElementById("kraunasiP").style.display = "block";
+                    document.getElementById("loadMain").style.display = "flex";
+                }, 4050);
+                setTimeout(() => {
+                    document.getElementById("keypadoDivas").style.display = "none";
+                    document.getElementById("naudotojasLogin").style.display = "none";
+                    document.getElementById("kraunasiP").style.opacity = "1";
+                    document.getElementById("loadMain").style.opacity = "1";
+                }, 4350);
+                setTimeout(() => {
+                    document.getElementById("registerClosed").style.display = "flex";
+                    document.getElementById("kraunasiP").style.opacity = "0";
+                    document.getElementById("loadMain").style.opacity = "0";
+                }, 10000);
+                setTimeout(() => {
+                    document.getElementById("registerClosed").style.opacity = "1";
+                    document.getElementById("kraunasiP").style.display = "none";
+                    document.getElementById("loadMain").style.display = "none";
+                }, 10300);
+          }
+                else if(form.pin.value == '')
+            {
+                document.getElementById("beep").play();
+                document.getElementById('beep').currentTime = 0;
+                document.getElementById("tekstas").style.opacity = "0.5";
+                document.getElementById("checkBtn").style.opacity = "0.5";
+                document.getElementById("vienasY").style.pointerEvents = "none";
+                document.getElementById("duY").style.pointerEvents = "none";
+                document.getElementById("trysY").style.pointerEvents = "none";
+                document.getElementById("keturiY").style.pointerEvents = "none";
+                document.getElementById("penkiY").style.pointerEvents = "none";
+                document.getElementById("sesiY").style.pointerEvents = "none";
+                document.getElementById("septyniY").style.pointerEvents = "none";
+                document.getElementById("astuoniY").style.pointerEvents = "none";
+                document.getElementById("devyniY").style.pointerEvents = "none";
+                document.getElementById("istrinimas").style.pointerEvents = "none";
+                document.getElementById("nulisY").style.pointerEvents = "none";
+                document.getElementById("checkBtn").style.pointerEvents = "none";
+                setTimeout(() => {
+                    document.getElementById("vienasY").style.opacity = "0.5";
+                    document.getElementById("duY").style.opacity = "0.5";
+                    document.getElementById("trysY").style.opacity = "0.5";
+                    document.getElementById("keturiY").style.opacity = "0.5";
+                    document.getElementById("penkiY").style.opacity = "0.5";
+                    document.getElementById("sesiY").style.opacity = "0.5";
+                    document.getElementById("septyniY").style.opacity = "0.5";
+                    document.getElementById("astuoniY").style.opacity = "0.5";
+                    document.getElementById("devyniY").style.opacity = "0.5";
+                    document.getElementById("istrinimas").style.opacity = "0.5";
+                    document.getElementById("nulisY").style.opacity = "0.5";
+                    document.getElementById("checkBtn").style.opacity = "0.5";
+                }, 150);
+                setTimeout(() => {
+                    document.getElementById("vienasY").style.opacity = "1";
+                    document.getElementById("duY").style.opacity = "1";
+                    document.getElementById("trysY").style.opacity = "1";
+                    document.getElementById("keturiY").style.opacity = "1";
+                    document.getElementById("penkiY").style.opacity = "1";
+                    document.getElementById("sesiY").style.opacity = "1";
+                    document.getElementById("septyniY").style.opacity = "1";
+                    document.getElementById("astuoniY").style.opacity = "1";
+                    document.getElementById("devyniY").style.opacity = "1";
+                    document.getElementById("tekstas").style.opacity = "1";
+                    document.getElementById("istrinimas").style.opacity = "1";
+                    document.getElementById("nulisY").style.opacity = "1";
+                    document.getElementById("checkBtn").style.opacity = "1";
+                    document.getElementById("vienasY").style.pointerEvents = "all";
+                    document.getElementById("duY").style.pointerEvents = "all";
+                    document.getElementById("trysY").style.pointerEvents = "all";
+                    document.getElementById("keturiY").style.pointerEvents = "all";
+                    document.getElementById("penkiY").style.pointerEvents = "all";
+                    document.getElementById("sesiY").style.pointerEvents = "all";
+                    document.getElementById("septyniY").style.pointerEvents = "all";
+                    document.getElementById("astuoniY").style.pointerEvents = "all";
+                    document.getElementById("devyniY").style.pointerEvents = "all";
+                    document.getElementById("istrinimas").style.pointerEvents = "all";
+                    document.getElementById("nulisY").style.pointerEvents = "all";
+                    document.getElementById("checkBtn").style.pointerEvents = "all";
+                    document.getElementById("denied").play();
+                }, 650);
+                setTimeout(() => {
+                    document.getElementById("tekstas").style.marginLeft = "60px";
+                }, 650);
+                setTimeout(() => {
+                    document.getElementById("tekstas").style.marginLeft = "-35px";
+                }, 750);
+                setTimeout(() => {
+                    document.getElementById("tekstas").style.marginLeft = "10px";
+                }, 850);
+                setTimeout(() => {
+                    document.getElementById("tekstas").style.marginLeft = "0";
+                }, 950);
+            }
+            else{
+                document.getElementById("beep").play();
+                document.getElementById('beep').currentTime = 0;
+                document.getElementById("tekstas").style.opacity = "0.5";
+                document.getElementById("checkBtn").style.opacity = "0.5";
+                document.getElementById("vienasY").style.pointerEvents = "none";
+                document.getElementById("duY").style.pointerEvents = "none";
+                document.getElementById("trysY").style.pointerEvents = "none";
+                document.getElementById("keturiY").style.pointerEvents = "none";
+                document.getElementById("penkiY").style.pointerEvents = "none";
+                document.getElementById("sesiY").style.pointerEvents = "none";
+                document.getElementById("septyniY").style.pointerEvents = "none";
+                document.getElementById("astuoniY").style.pointerEvents = "none";
+                document.getElementById("devyniY").style.pointerEvents = "none";
+                document.getElementById("istrinimas").style.pointerEvents = "none";
+                document.getElementById("nulisY").style.pointerEvents = "none";
+                document.getElementById("checkBtn").style.pointerEvents = "none";
+                setTimeout(() => {
+                    document.getElementById("vienasY").style.opacity = "0.5";
+                    document.getElementById("duY").style.opacity = "0.5";
+                    document.getElementById("trysY").style.opacity = "0.5";
+                    document.getElementById("keturiY").style.opacity = "0.5";
+                    document.getElementById("penkiY").style.opacity = "0.5";
+                    document.getElementById("sesiY").style.opacity = "0.5";
+                    document.getElementById("septyniY").style.opacity = "0.5";
+                    document.getElementById("astuoniY").style.opacity = "0.5";
+                    document.getElementById("devyniY").style.opacity = "0.5";
+                    document.getElementById("istrinimas").style.opacity = "0.5";
+                    document.getElementById("nulisY").style.opacity = "0.5";
+                    document.getElementById("checkBtn").style.opacity = "0.5";
+                }, 150);
+                setTimeout(() => {
+                    document.getElementById("vienasY").style.opacity = "1";
+                    document.getElementById("duY").style.opacity = "1";
+                    document.getElementById("trysY").style.opacity = "1";
+                    document.getElementById("keturiY").style.opacity = "1";
+                    document.getElementById("penkiY").style.opacity = "1";
+                    document.getElementById("sesiY").style.opacity = "1";
+                    document.getElementById("septyniY").style.opacity = "1";
+                    document.getElementById("astuoniY").style.opacity = "1";
+                    document.getElementById("devyniY").style.opacity = "1";
+                    document.getElementById("tekstas").style.opacity = "1";
+                    document.getElementById("istrinimas").style.opacity = "1";
+                    document.getElementById("nulisY").style.opacity = "1";
+                    document.getElementById("checkBtn").style.opacity = "1";
+                    document.getElementById("vienasY").style.pointerEvents = "all";
+                    document.getElementById("duY").style.pointerEvents = "all";
+                    document.getElementById("trysY").style.pointerEvents = "all";
+                    document.getElementById("keturiY").style.pointerEvents = "all";
+                    document.getElementById("penkiY").style.pointerEvents = "all";
+                    document.getElementById("sesiY").style.pointerEvents = "all";
+                    document.getElementById("septyniY").style.pointerEvents = "all";
+                    document.getElementById("astuoniY").style.pointerEvents = "all";
+                    document.getElementById("devyniY").style.pointerEvents = "all";
+                    document.getElementById("istrinimas").style.pointerEvents = "all";
+                    document.getElementById("nulisY").style.pointerEvents = "all";
+                    document.getElementById("checkBtn").style.pointerEvents = "all";
+                    document.getElementById("denied").play();
+                }, 4000);
+                setTimeout(() => {
+                    document.getElementById("tekstas").style.marginLeft = "60px";
+                }, 4000);
+                setTimeout(() => {
+                    document.getElementById("tekstas").style.marginLeft = "-35px";
+                }, 4100);
+                setTimeout(() => {
+                    document.getElementById("tekstas").style.marginLeft = "10px";
+                }, 4200);
+                setTimeout(() => {
+                    document.getElementById("tekstas").style.marginLeft = "0";
+                }, 4300);
+            }
+        }
         function loadFunction() {
+            document.getElementById("powerOn").style.opacity = "0";
+            setTimeout(() => {
+                document.getElementById("powerOn").style.display = "none";
+            }, 300);
         setTimeout(() => {
             document.getElementById("hat").style.opacity = "1";
         }, 1000);
@@ -379,7 +738,6 @@
         setTimeout(() => {
             document.getElementById("loadScreen").style.display = "none";
             document.getElementById("soundOn").style.opacity = "1";
-            document.getElementById("ding").play();
         }, 5650);
         setTimeout(() => {
             document.getElementById("main").style.display = "block";
@@ -398,13 +756,224 @@
             document.getElementById("loadMain").style.display = "none";
             document.getElementById("keypadoDivas").style.opacity = "1";
             document.getElementById("naudotojasLogin").style.opacity = "1";
-            document.getElementById("reikia_tap_pat").play();
         }, 11300);
       }
-      var audioDing = document.getElementById("ding");
-        ding.onended = function() {
-            document.getElementById("palaukite").play();
-        };
+      function atidaryti() {
+        document.getElementById("beep").play();
+        document.getElementById('beep').currentTime = 0;
+        document.getElementById("openRegister").style.backgroundColor = "white";
+        setTimeout(() => {
+            document.getElementById("openRegister").style.backgroundColor = "#ececf9";
+            document.getElementById("registerClosed").style.opacity = "0";
+            document.getElementById("kraunasiP").style.display = "block";
+            document.getElementById("loadMain").style.display = "flex";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("registerClosed").style.display = "none";
+            document.getElementById("kraunasiP").style.opacity = "1";
+            document.getElementById("loadMain").style.opacity = "1";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("cardReaderInfo").style.display = "flex";
+            document.getElementById("kraunasiP").style.opacity = "0";
+            document.getElementById("loadMain").style.opacity = "0";
+        }, 4000);
+        setTimeout(() => {
+            document.getElementById("cardReaderInfo").style.opacity = "1";
+            document.getElementById("kraunasiP").style.display = "none";
+            document.getElementById("loadMain").style.display = "none";
+        }, 4300);
+        setTimeout(() => {
+            document.getElementById("okRead").style.opacity = "1";
+            document.getElementById("okRead").style.pointerEvents = "all";
+        }, 6300);
+      }
+      function okReader() {
+        document.getElementById("beep").play();
+        document.getElementById('beep').currentTime = 0;
+        document.getElementById("okRead").style.backgroundColor = "white";
+        setTimeout(() => {
+            document.getElementById("okRead").style.backgroundColor = "#ececf9";
+            document.getElementById("cardReaderInfo").style.opacity = "0";
+            document.getElementById("kraunasiP").style.display = "block";
+            document.getElementById("loadMain").style.display = "flex";
+            document.getElementById("okRead").style.opacity = "0.5";
+            document.getElementById("okRead").style.pointerEvents = "none";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("cardReaderInfo").style.display = "none";
+            document.getElementById("kraunasiP").style.opacity = "1";
+            document.getElementById("loadMain").style.opacity = "1";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("options").style.display = "flex";
+            document.getElementById("keypado2Divas").style.display = "flex";
+            document.getElementById("kraunasiP").style.opacity = "0";
+            document.getElementById("loadMain").style.opacity = "0";
+        }, 4000);
+        setTimeout(() => {
+            document.getElementById("options").style.opacity = "1";
+            document.getElementById("keypado2Divas").style.opacity = "1";
+            document.getElementById("kraunasiP").style.display = "none";
+            document.getElementById("loadMain").style.display = "none";
+        }, 4300);
+      }
+      function forceQuit() {
+        document.getElementById("beep").play();
+        document.getElementById('beep').currentTime = 0;
+        document.getElementById("quit").style.backgroundColor = "white";
+        document.getElementById("quitBlack").style.display = "block";
+        document.getElementById("quitBack").style.display = "flex";
+        setTimeout(() => {
+            document.getElementById("quit").style.backgroundColor = "#ececf9";
+            document.getElementById("quitBlack").style.opacity = "0.2";
+            document.getElementById("quitBack").style.opacity = "1";
+        }, 150);
+      }
+      function quitCancel() {
+        document.getElementById("beep").play();
+        document.getElementById('beep').currentTime = 0;
+        document.getElementById("cancelQuit").style.backgroundColor = "white";
+        setTimeout(() => {
+            document.getElementById("cancelQuit").style.backgroundColor = "#ececf9";
+            document.getElementById("quitBlack").style.opacity = "0";
+            document.getElementById("quitBack").style.opacity = "0";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("quitBlack").style.display = "none";
+            document.getElementById("quitBack").style.display = "none";
+        }, 450); 
+      }
+      function quitConfirm() {
+        document.getElementById("beep").play();
+        document.getElementById('beep').currentTime = 0;
+        document.getElementById("confirmQuit").style.backgroundColor = "white";
+        setTimeout(() => {
+            document.getElementById("confirmQuit").style.backgroundColor = "#ececf9";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("forceQuitScreen").style.display = "block";
+            document.getElementById("denied").play();
+            document.getElementById('denied').currentTime = 0;
+        }, 500);
+        setTimeout(() => {
+            document.getElementById("loadQuit").style.display = "none";
+        }, 3500);
+        setTimeout(() => {
+            document.getElementById("quitTextYellow").style.display = "block";
+            document.getElementById("quitTextYellow2").style.display = "block";
+        }, 4500);
+        setTimeout(() => {
+            document.getElementById("quitText1").style.display = "block";
+        }, 5500);
+        setTimeout(() => {
+            document.getElementById("quitText2").style.display = "block";
+        }, 8500);
+        setTimeout(() => {
+            document.getElementById("quitText3").style.display = "block";
+        }, 9500);
+        setTimeout(() => {
+            document.getElementById("quitText4").style.display = "block";
+        }, 11500);
+        setTimeout(() => {
+            document.getElementById("quitText5").style.display = "block";
+        }, 12500);
+        setTimeout(() => {
+            document.getElementById("quitText1").style.display = "none";
+            document.getElementById("quitText2").style.display = "none";
+            document.getElementById("quitText3").style.display = "none";
+            document.getElementById("quitText4").style.display = "none";
+            document.getElementById("quitText5").style.display = "none";
+            document.getElementById("quitTextYellow").style.display = "none";
+            document.getElementById("quitTextYellow2").style.display = "none";
+        }, 20000);
+        setTimeout(() => {
+            location.replace('index_copy.html');
+        }, 20100);
+      }
+      function registerClose() {
+        document.getElementById("beep").play();
+        document.getElementById('beep').currentTime = 0;
+        document.getElementById("closeRegister").style.backgroundColor = "white";
+        setTimeout(() => {
+            document.getElementById("closeRegister").style.backgroundColor = "#ececf9";
+            document.getElementById("options").style.opacity = "0";
+            document.getElementById("keypado2Divas").style.opacity = "0";
+            document.getElementById("kraunasiP").style.display = "block";
+            document.getElementById("loadMain").style.display = "flex";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("options").style.display = "none";
+            document.getElementById("keypado2Divas").style.display = "none";
+            document.getElementById("kraunasiP").style.opacity = "1";
+            document.getElementById("loadMain").style.opacity = "1";
+        }, 450);
+        setTimeout(() => {
+            document.getElementById("registerClosed").style.display = "flex";
+            document.getElementById("kraunasiP").style.opacity = "0";
+            document.getElementById("loadMain").style.opacity = "0";
+        }, 4000);
+        setTimeout(() => {
+            document.getElementById("registerClosed").style.opacity = "1";
+            document.getElementById("kraunasiP").style.display = "none";
+            document.getElementById("loadMain").style.display = "none";
+        }, 4300);
+      }
+      function turnOff() {
+        document.getElementById("beep").play();
+        document.getElementById('beep').currentTime = 0;
+        document.getElementById("off").style.backgroundColor = "white";
+        document.getElementById("offBlack").style.display = "block";
+        document.getElementById("offBack").style.display = "flex";
+        setTimeout(() => {
+            document.getElementById("off").style.backgroundColor = "#ececf9";
+            document.getElementById("offBlack").style.opacity = "0.2";
+            document.getElementById("offBack").style.opacity = "1";
+        }, 150);
+      }
+      function offCancel() {
+        document.getElementById("beep").play();
+        document.getElementById('beep').currentTime = 0;
+        document.getElementById("cancelOff").style.backgroundColor = "white";
+        setTimeout(() => {
+            document.getElementById("cancelOff").style.backgroundColor = "#ececf9";
+            document.getElementById("offBlack").style.opacity = "0";
+            document.getElementById("offBack").style.opacity = "0";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("offBlack").style.display = "none";
+            document.getElementById("offBack").style.display = "none";
+        }, 450); 
+      }
+      function offConfirm() {
+        document.getElementById("beep").play();
+        document.getElementById('beep').currentTime = 0;
+        document.getElementById("confirmOff").style.backgroundColor = "white";
+        document.getElementById("mainOff").style.display = "block";
+        setTimeout(() => {
+            document.getElementById("confirmOff").style.backgroundColor = "#ececf9";
+            document.getElementById("mainOff").style.opacity = "1";
+            document.getElementById("offScreen").style.display = "flex";
+        }, 150);
+        setTimeout(() => {
+            document.getElementById("offScreen").style.opacity = "1";
+        }, 1500);
+        setTimeout(() => {
+            document.getElementById("offLoad").style.opacity = "0";
+            document.getElementById("redos2").style.opacity = "1";
+        }, 11500);
+        setTimeout(() => {
+            document.getElementById("hat2").style.marginTop = "0";
+            document.getElementById("hat2").style.fontSize = "150px";
+            document.getElementById("redos2").style.opacity = "0";
+        }, 14000);
+        setTimeout(() => {
+            document.getElementById("hat2").style.opacity = "0";
+        }, 16000);
+        setTimeout(() => {
+            location.replace('index_copy.html');
+        }, 16500);
+      }
     </script>
 </body>
 </html>
