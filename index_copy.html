@@ -304,6 +304,7 @@
         // }
         function pirmas() {
             document.getElementById("beep").play();
+            document.getElementById('beep').muted = false
             document.getElementById('beep').currentTime = 0;
             document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("vienetas").value;
             document.getElementById("vienasY").style.backgroundColor = "white";
@@ -317,6 +318,7 @@
         }
         function antras() {
             document.getElementById("beep").play();
+            document.getElementById('beep').muted = false
             document.getElementById('beep').currentTime = 0;
             document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("dvejetas").value;
             document.getElementById("duY").style.backgroundColor = "white";
@@ -330,6 +332,7 @@
         }
         function trecias() {
             document.getElementById("beep").play();
+            document.getElementById('beep').muted = false
             document.getElementById('beep').currentTime = 0;
             document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("trejetas").value;
             document.getElementById("trysY").style.backgroundColor = "white";
@@ -343,6 +346,7 @@
         }
         function ketvirtas() {
             document.getElementById("beep").play();
+            document.getElementById('beep').muted = false
             document.getElementById('beep').currentTime = 0;
             document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("ketvertas").value;
             document.getElementById("keturiY").style.backgroundColor = "white";
@@ -356,6 +360,7 @@
         }
         function penktas() {
             document.getElementById("beep").play();
+            document.getElementById('beep').muted = false
             document.getElementById('beep').currentTime = 0;
             document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("penketas").value;
             document.getElementById("penkiY").style.backgroundColor = "white";
@@ -369,6 +374,7 @@
         }
         function sestas() {
             document.getElementById("beep").play();
+            document.getElementById('beep').muted = false
             document.getElementById('beep').currentTime = 0;
             document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("sesetas").value;
             document.getElementById("sesiY").style.backgroundColor = "white";
@@ -382,6 +388,7 @@
         }
         function septintas() {
             document.getElementById("beep").play();
+            document.getElementById('beep').muted = false
             document.getElementById('beep').currentTime = 0;
             document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("septynetas").value;
             document.getElementById("septyniY").style.backgroundColor = "white";
@@ -395,6 +402,7 @@
         }
         function astuntas() {
             document.getElementById("beep").play();
+            document.getElementById('beep').muted = false
             document.getElementById('beep').currentTime = 0;
             document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("astuonetas").value;
             document.getElementById("astuoniY").style.backgroundColor = "white";
@@ -408,6 +416,7 @@
         }
         function devintas() {
             document.getElementById("beep").play();
+            document.getElementById('beep').muted = false
             document.getElementById('beep').currentTime = 0;
             document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("devynetas").value;
             document.getElementById("devyniY").style.backgroundColor = "white";
@@ -421,6 +430,7 @@
         }
         function nulinis() {
             document.getElementById("beep").play();
+            document.getElementById('beep').muted = false
             document.getElementById('beep').currentTime = 0;
             document.getElementById("inputas").value = document.getElementById("inputas").value + document.getElementById("nulis").value;
             document.getElementById("nulisY").style.backgroundColor = "white";
@@ -434,6 +444,7 @@
         }
         function istrinti() {
             document.getElementById("beep").play();
+            document.getElementById('beep').muted = false
             document.getElementById('beep').currentTime = 0;
             document.getElementById("inputas").value = '';
             document.getElementById("istrinimas").style.opacity = "0.5";
@@ -450,6 +461,7 @@
                 if(form.pin.value == "000000")
                 {
                     document.getElementById("beep").play();
+                    document.getElementById('beep').muted = false
                 document.getElementById('beep').currentTime = 0;
                 document.getElementById("tekstas").style.opacity = "0.5";
                 document.getElementById("checkBtn").style.opacity = "0.5";
@@ -534,6 +546,7 @@
                 else if(form.pin.value == '')
             {
                 document.getElementById("beep").play();
+                document.getElementById('beep').muted = false
                 document.getElementById('beep').currentTime = 0;
                 document.getElementById("tekstas").style.opacity = "0.5";
                 document.getElementById("checkBtn").style.opacity = "0.5";
@@ -590,6 +603,8 @@
                     document.getElementById("nulisY").style.pointerEvents = "all";
                     document.getElementById("checkBtn").style.pointerEvents = "all";
                     document.getElementById("denied").play();
+                    document.getElementById('denied').muted = false
+                    document.getElementById('denied').currentTime = 0;
                 }, 650);
                 setTimeout(() => {
                     document.getElementById("tekstas").style.marginLeft = "60px";
@@ -606,6 +621,7 @@
             }
             else{
                 document.getElementById("beep").play();
+                document.getElementById('beep').muted = false
                 document.getElementById('beep').currentTime = 0;
                 document.getElementById("tekstas").style.opacity = "0.5";
                 document.getElementById("checkBtn").style.opacity = "0.5";
@@ -662,6 +678,8 @@
                     document.getElementById("nulisY").style.pointerEvents = "all";
                     document.getElementById("checkBtn").style.pointerEvents = "all";
                     document.getElementById("denied").play();
+                    document.getElementById('denied').muted = false
+                    document.getElementById('denied').currentTime = 0;
                 }, 4000);
                 setTimeout(() => {
                     document.getElementById("tekstas").style.marginLeft = "60px";
@@ -763,6 +781,7 @@
       }
       function atidaryti() {
         document.getElementById("beep").play();
+        document.getElementById('beep').muted = false
         document.getElementById('beep').currentTime = 0;
         document.getElementById("openRegister").style.backgroundColor = "white";
         setTimeout(() => {
@@ -793,6 +812,7 @@
       }
       function okReader() {
         document.getElementById("beep").play();
+        document.getElementById('beep').muted = false
         document.getElementById('beep').currentTime = 0;
         document.getElementById("okRead").style.backgroundColor = "white";
         setTimeout(() => {
@@ -823,6 +843,7 @@
       }
       function forceQuit() {
         document.getElementById("beep").play();
+        document.getElementById('beep').muted = false
         document.getElementById('beep').currentTime = 0;
         document.getElementById("quit").style.backgroundColor = "white";
         document.getElementById("quitBlack").style.display = "block";
@@ -835,6 +856,7 @@
       }
       function quitCancel() {
         document.getElementById("beep").play();
+        document.getElementById('beep').muted = false
         document.getElementById('beep').currentTime = 0;
         document.getElementById("cancelQuit").style.backgroundColor = "white";
         setTimeout(() => {
@@ -849,6 +871,7 @@
       }
       function quitConfirm() {
         document.getElementById("beep").play();
+        document.getElementById('beep').muted = false
         document.getElementById('beep').currentTime = 0;
         document.getElementById("confirmQuit").style.backgroundColor = "white";
         setTimeout(() => {
@@ -857,6 +880,7 @@
         setTimeout(() => {
             document.getElementById("forceQuitScreen").style.display = "block";
             document.getElementById("denied").play();
+            document.getElementById('denied').muted = false
             document.getElementById('denied').currentTime = 0;
         }, 500);
         setTimeout(() => {
@@ -896,6 +920,7 @@
       }
       function registerClose() {
         document.getElementById("beep").play();
+        document.getElementById('beep').muted = false
         document.getElementById('beep').currentTime = 0;
         document.getElementById("closeRegister").style.backgroundColor = "white";
         setTimeout(() => {
@@ -924,6 +949,7 @@
       }
       function turnOff() {
         document.getElementById("beep").play();
+        document.getElementById('beep').muted = false
         document.getElementById('beep').currentTime = 0;
         document.getElementById("off").style.backgroundColor = "white";
         document.getElementById("offBlack").style.display = "block";
@@ -936,6 +962,7 @@
       }
       function offCancel() {
         document.getElementById("beep").play();
+        document.getElementById('beep').muted = false
         document.getElementById('beep').currentTime = 0;
         document.getElementById("cancelOff").style.backgroundColor = "white";
         setTimeout(() => {
@@ -950,6 +977,7 @@
       }
       function offConfirm() {
         document.getElementById("beep").play();
+        document.getElementById('beep').muted = false
         document.getElementById('beep').currentTime = 0;
         document.getElementById("confirmOff").style.backgroundColor = "white";
         document.getElementById("mainOff").style.display = "block";
