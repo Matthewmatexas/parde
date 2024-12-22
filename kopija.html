@@ -69,7 +69,7 @@
             width: auto;
             height: auto;
             padding: 15px;
-            background-color: #ececf9;
+            background-color: lightgrey;
             border-radius: 50px;
             box-shadow: 0 0 15px lightgrey;
             transition: 0.3s;
@@ -95,12 +95,38 @@
             width: auto;
             height: auto;
             padding: 15px;
-            background-color: #ececf9;
+            background-color: lightgrey;
             border-radius: 50px;
             box-shadow: 0 0 15px lightgrey;
             transition: 0.3s;
         }
         #closedNotification p{
+            font-size: 17px;
+        }
+        #pagalbaNotificationBackground{
+            position: fixed;
+            width: 100%;
+            height: auto;
+            padding: 15px;
+            top: -100px;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s;
+        }
+        #pagalbaNotification{
+            width: auto;
+            height: auto;
+            padding: 15px;
+            background-color: lightgrey;
+            border-radius: 50px;
+            box-shadow: 0 0 15px lightgrey;
+            transition: 0.3s;
+        }
+        #pagalbaNotification p{
             font-size: 17px;
         }
         #loading{
@@ -350,7 +376,6 @@
             width: 100px;
             margin-top: 10px;
             border-radius: 15px;
-            
         }
         #cardReaderNeededWarning button{
             width: auto;
@@ -403,7 +428,46 @@
             opacity: 0.3;
             transform: scale(0.9);
         }
+        #helpWindow{
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: black;
+            opacity: 0;
+            transition: 0.3s;
+            position: fixed;
+        }
+        #helpWindow button{
+            width: auto;
+            padding-left: 15px;
+            padding-right: 15px;
+            height: 40px;
+            border: none;
+            border-radius: 50px;
+            background-color: lightgrey;
+            font-size: 17px;
+            margin-top: 20px;
+            margin-left: 5px;
+            margin-right: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: black;
+        }
+        #helpWindow button:active{
+            color: black;
+            opacity: 0.3;
+            transform: scale(0.9);
+        }
     </style>
+
+    <audio src="ding.mp3" id="ding"></audio>
+    <audio src="pagalba_11.mp3" id="pagalba_11"></audio>
+    <audio src="pagalba_22.mp3" id="pagalba_22"></audio>
+    <audio src="pagalba_33.mp3" id="pagalba_33"></audio>
+    <audio src="pagalba_44.mp3" id="pagalba_44"></audio>
 
     <p class="shopee">&copy; FINBONK Shopee</p>
     <p id="pardavejas"><i class="fa-regular fa-circle-user"></i> Pardavėjas</p>
@@ -417,6 +481,14 @@
             <p><b><i class="fa-regular fa-circle-check"></i> Kasa uždaryta</b></p>
         </div>
     </div>
+    <div id="pagalbaNotificationBackground">
+        <div id="pagalbaNotification">
+            <p id="11" style="display: none;"><b><i class="fa-solid fa-volume-high"></i> Pagalba:</b> Sistema</p>
+            <p id="22" style="display: none;"><b><i class="fa-solid fa-volume-high"></i> Pagalba:</b> Patarimai</p>
+            <p id="33" style="display: none;"><b><i class="fa-solid fa-volume-high"></i> Pagalba:</b> Kasininkas</p>
+            <p id="44" style="display: none;"><b><i class="fa-solid fa-volume-high"></i> Pagalba:</b> Kita</p>
+        </div>
+    </div>
     <div id="loading">
         <i class="fa-regular fa-hourglass-half"></i>
         <p>Dirbama<span style="animation: atsirasti1 2s linear infinite;">.</span><span style="animation: atsirasti2 2s linear infinite;">.</span><span style="animation: atsirasti3 2s linear infinite;">.</span></p>
@@ -428,15 +500,15 @@
     <div id="chooseUser">
         <h1>Pasirinkite naudotoją:</h1>
         <section>
-            <div onclick="naudotojasPardavejas()" ontouchstart><i class="fa-regular fa-circle-user"></i><p><i class="fa-solid fa-lock" style="font-size: 17px;"></i> Pardavėjas</p></div>
+            <div onclick="naudotojasPardavejas()" ontouchstart><i class="fa-regular fa-circle-user"></i><p><i class="fa-solid fa-lock" style="font-size: 17px; display: none;"></i>Pardavėjas</p></div>
             <div onclick="sukurtiNaudotoja()" ontouchstart><i class="fa-solid fa-circle-plus"></i><p>Pridėti naudotoją</p></div>
         </section>
     </div>
     <div id="userCreationError">
         <h1><i class="fa-solid fa-triangle-exclamation"></i> Klaida!</h1>
         <p><b>Nepavyko įvykdyti užklausos, nes:</b></p>
-        <p>"ACCESS DENIED - NO PERMISSION"</p>
-        <p>"'add_user' FAILED"</p>
+        <p>"'add_user' FUNCTION UNAVAILABLE"</p>
+        <p>"'add_user' NOT PERMITTED"</p>
         <button onclick="uzdarytiNaujoNaudotojoKlaida()" ontouchstart><i class="fa-regular fa-circle-xmark"></i> Uždaryti</button>
     </div>
     <!-- <div id="loginPardavejas">
@@ -462,7 +534,21 @@
         <h1>Pasirinkite veiksmą:</h1>
         <button ontouchstart><i class="fa-solid fa-cart-shopping"></i> Pradėti naują pirkimą</button>
         <button onclick="uzdarytiKasa()" ontouchstart><i class="fa-solid fa-lock-open"></i> Uždaryti kasą</button>
-        <button ontouchstart><i class="fa-solid fa-handshake-angle"></i> Kviesti pagalbą</button>
+        <button onclick="pagalba()" ontouchstart><i class="fa-solid fa-handshake-angle"></i> Kviesti pagalbą</button>
+    </div>
+    <div id="helpWindow">
+        <h1>Pasirinkite pagalbos sritį:</h1>
+        <div>
+            <button onclick="pagalba11()" ontouchstart><i class="fa-regular fa-folder-closed"></i> Sistema</button>
+            <button onclick="pagalba22()" ontouchstart><i class="fa-regular fa-circle-question"></i> Patarimai</button>
+            <button onclick="pagalba33()" ontouchstart><i class="fa-solid fa-user-tag"></i> Kasininkas</button>
+            <button onclick="pagalba44()" ontouchstart><i class="fa-solid fa-ellipsis"></i> Kita</button>
+            <button style="display: none;" id="11pagalba" onclick="pagalba11voice()">11pagalba</button>
+            <button style="display: none;" id="22pagalba" onclick="pagalba22voice()">22pagalba</button>
+            <button style="display: none;" id="33pagalba" onclick="pagalba33voice()">33pagalba</button>
+            <button style="display: none;" id="44pagalba" onclick="pagalba44voice()">44pagalba</button>
+        </div>
+        <button onclick="uzdarytiPagalba()" ontouchstart><i class="fa-regular fa-circle-xmark"></i> Uždaryti</button>
     </div>
     
 
@@ -541,10 +627,12 @@
                 document.getElementById("openedNotificationBackground").style.top = "0";
             }, 5920);
             setTimeout(() => {
-                document.getElementById("openedNotification").style.backgroundColor = "lightgrey";
+                document.getElementById("openedNotification").style.backgroundColor = "black";
+                document.getElementById("openedNotification").style.color = "white";
             }, 6420);
             setTimeout(() => {
-                document.getElementById("openedNotification").style.backgroundColor = "#ececf9";
+                document.getElementById("openedNotification").style.backgroundColor = "lightgrey";
+                document.getElementById("openedNotification").style.color = "black";
             }, 6720);
             setTimeout(() => {
                 document.getElementById("reader3").style.display = "none";
@@ -609,14 +697,148 @@
                 document.getElementById("closedNotificationBackground").style.top = "0";
             }, 5920);
             setTimeout(() => {
-                document.getElementById("closedNotification").style.backgroundColor = "lightgrey";
+                document.getElementById("closedNotification").style.backgroundColor = "black";
+                document.getElementById("closedNotification").style.color = "white";
             }, 6420);
             setTimeout(() => {
-                document.getElementById("closedNotification").style.backgroundColor = "#ececf9";
+                document.getElementById("closedNotification").style.backgroundColor = "lightgrey";
+                document.getElementById("closedNotification").style.color = "black";
             }, 6720);
             setTimeout(() => {
                 document.getElementById("closedNotificationBackground").style.top = "-100px";
             }, 8720);
+        }
+        function pagalba() {
+            document.getElementById("chooseAction").style.opacity = "0";
+            setTimeout(() => {
+                document.getElementById("chooseAction").style.display = "none";
+                document.getElementById("loading").style.display = "flex";
+            }, 300);
+            setTimeout(() => {
+                document.getElementById("loading").style.opacity = "1";
+            }, 310);
+            setTimeout(() => {
+                document.getElementById("loading").style.opacity = "0";
+            }, 5610);
+            setTimeout(() => {
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("helpWindow").style.display = "flex";
+            }, 5910);
+            setTimeout(() => {
+                document.getElementById("helpWindow").style.opacity = "1";
+            }, 5920);
+        }
+        function uzdarytiPagalba() {
+            document.getElementById("helpWindow").style.opacity = "0";
+            setTimeout(() => {
+                document.getElementById("helpWindow").style.display = "none";
+                document.getElementById("loading").style.display = "flex";
+            }, 300);
+            setTimeout(() => {
+                document.getElementById("loading").style.opacity = "1";
+            }, 310);
+            setTimeout(() => {
+                document.getElementById("loading").style.opacity = "0";
+            }, 5610);
+            setTimeout(() => {
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("chooseAction").style.display = "flex";
+            }, 5910);
+            setTimeout(() => {
+                document.getElementById("chooseAction").style.opacity = "1";
+            }, 5920);
+        }
+        function pagalba11() {
+            document.getElementById('ding').muted = false;
+            document.getElementById('ding').currentTime = 0;
+            document.getElementById("ding").play();
+            document.getElementById("pagalbaNotificationBackground").style.top = "0";
+            document.getElementById("11").style.display = "block";
+            document.getElementById("helpWindow").style.pointerEvents = "none";
+            setTimeout(() => {
+                document.getElementById("11pagalba").click();
+            }, 2000);
+        }
+        function pagalba11voice() {
+            document.getElementById('pagalba_11').muted = false;
+            document.getElementById("pagalba_11").play();
+        }
+        document.getElementById("pagalba_11").onended = function() {
+            document.getElementById("pagalbaNotificationBackground").style.top = "-100px";    
+            setTimeout(() => {
+                document.getElementById("11").style.display = "none";
+                document.getElementById("helpWindow").style.pointerEvents = "all";
+                document.getElementById('pagalba_11').currentTime = 0;
+            }, 300);
+        }
+        function pagalba22() {
+            document.getElementById('ding').muted = false;
+            document.getElementById('ding').currentTime = 0;
+            document.getElementById("ding").play();
+            document.getElementById("pagalbaNotificationBackground").style.top = "0";
+            document.getElementById("22").style.display = "block";
+            document.getElementById("helpWindow").style.pointerEvents = "none";
+            setTimeout(() => {
+                document.getElementById("22pagalba").click();
+            }, 2000);
+        }
+        function pagalba22voice() {
+            document.getElementById('pagalba_22').muted = false;
+            document.getElementById("pagalba_22").play();
+        }
+        document.getElementById("pagalba_22").onended = function() {
+            document.getElementById("pagalbaNotificationBackground").style.top = "-100px";    
+            setTimeout(() => {
+                document.getElementById("22").style.display = "none";
+                document.getElementById("helpWindow").style.pointerEvents = "all";
+                document.getElementById('pagalba_2').currentTime = 0;
+            }, 300);
+        }
+        function pagalba33() {
+            document.getElementById('ding').muted = false;
+            document.getElementById('ding').currentTime = 0;
+            document.getElementById("ding").play();
+            document.getElementById("pagalbaNotificationBackground").style.top = "0";
+            document.getElementById("33").style.display = "block";
+            document.getElementById("helpWindow").style.pointerEvents = "none";
+            setTimeout(() => {
+                document.getElementById("33pagalba").click();
+            }, 2000);
+        }
+        function pagalba33voice() {
+            document.getElementById('pagalba_33').muted = false;
+            document.getElementById("pagalba_33").play();
+        }
+        document.getElementById("pagalba_33").onended = function() {
+            document.getElementById("pagalbaNotificationBackground").style.top = "-100px";    
+            setTimeout(() => {
+                document.getElementById("33").style.display = "none";
+                document.getElementById("helpWindow").style.pointerEvents = "all";
+                document.getElementById('pagalba_33').currentTime = 0;
+            }, 300);
+        }
+        function pagalba44() {
+            document.getElementById('ding').muted = false;
+            document.getElementById('ding').currentTime = 0;
+            document.getElementById("ding").play();
+            document.getElementById("pagalbaNotificationBackground").style.top = "0";
+            document.getElementById("44").style.display = "block";
+            document.getElementById("helpWindow").style.pointerEvents = "none";
+            setTimeout(() => {
+                document.getElementById("44pagalba").click();
+            }, 2000);
+        }
+        function pagalba44voice() {
+            document.getElementById('pagalba_44').muted = false;
+            document.getElementById("pagalba_44").play();
+        }
+        document.getElementById("pagalba_44").onended = function() {
+            document.getElementById("pagalbaNotificationBackground").style.top = "-100px";    
+            setTimeout(() => {
+                document.getElementById("44").style.display = "none";
+                document.getElementById("helpWindow").style.pointerEvents = "all";
+                document.getElementById('pagalba_44').currentTime = 0;
+            }, 300);
         }
     </script>
 </body>
